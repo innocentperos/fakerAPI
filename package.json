@@ -1,0 +1,21 @@
+{
+  "name": "fakerapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./lib/test/test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "express": "^4.18.2",
+    "install": "^0.13.0",
+    "npm": "^8.19.2"
+  }
+}
