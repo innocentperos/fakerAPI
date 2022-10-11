@@ -28,6 +28,7 @@ class FakerServer {
   private serverPath: string;
   private expressApp: Express;
   private expressRouter: Router;
+  private appPassed:boolean = false;
   // For full router handlers
   private requestHandlers: Map < string, RequestHandlerType > = new Map()
 
@@ -38,6 +39,7 @@ class FakerServer {
 
     this.serverPath = path;
     if (expressInstance) {
+      this.appPassed = true;
       this.expressApp = expressInstance;
     } else {
       this.expressApp = express()
@@ -58,11 +60,15 @@ class FakerServer {
   }
 
   public run(port: number = 8800) {
-    if (true) {
+     if(this.appPassed){
+      logMessage("Message an instance of Express app was pass to the constructor, no need to call run, the Faker server will start the moment the Express app starts","error")
+      return;
+     }
+     
       this.expressApp.listen(port, () => {
         console.log(`Faker Server running on http://localhost:${port}${this.serverPath}`)
       })
-    }
+    
   }
 
   public get(path: string, handler: RequestHandlerType) {
