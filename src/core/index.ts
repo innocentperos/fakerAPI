@@ -180,7 +180,9 @@ class FakerServer {
     const handlersPath = this.methodRequestHanders.keys()
 
     for (const handlerPath of handlersPath) {
-
+      
+      if(handled) break;
+      
       // Run the pathParams finder if the paths maches it will return an object of paramsType
       const pathMatchResult = PathUtil.isMatch(handlerPath, path)
 
