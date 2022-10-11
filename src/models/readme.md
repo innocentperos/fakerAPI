@@ -4,7 +4,9 @@ tags: []
 
 ---
 
-## FAModel
+# Join Letter
+
+## FAModel {#FAModel}
 
 This defines the structure and schema of the data FakerAPI will generate
 
@@ -31,3 +33,16 @@ fakerServer.get("/comments/", new FAListTransformer(CommentModel))
 fakerServer.run(5000)
 
 ```
+
+### API Reference
+
+The FAModel is a child of the [`FAAbstractModel`](#FAAbstractModel) abstract class, it accept an object as the only parameter of it constructor. The object keys (which is a string) represent the field it should generate while the value (which is an instance of the [`Field`](#Field) , `string`, `number`, `any[]`, or [`function`](#FieldFunctionType)) represent the type of data it would populate it with.
+
+> constructor
+>
+> ```typescript
+>constructor(fields: {[key: string]: string | number | any[] | Field })
+>
+>```
+
+
