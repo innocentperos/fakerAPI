@@ -1,8 +1,9 @@
-import {Fields, FAModel } from "../src/"
+import {Fields, FAModel , FakerServer} from "../src/"
 
 const userModel = new FAModel({
   name: new Fields.NameField(),
   email: new Fields.EmailField()
 })
 
-console.log(userModel.generate(null))
+const server = new FakerServer("/api")
+server.run()

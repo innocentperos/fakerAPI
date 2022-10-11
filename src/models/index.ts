@@ -1,8 +1,9 @@
 import { Fields, Field } from "./fields"
+import {ConfigType} from "./../core"
 
 abstract class FAAbstractModel {
 
-  public abstract generate(config?: any): object | any[] | string | number
+  public abstract generate(config?: ConfigType): object | any[] | string | number
 }
 
 type FieldFunctionType = (config?: any) => string | any[] | number | object
@@ -20,7 +21,7 @@ class FAModel extends FAAbstractModel {
     this.fields = fields
   }
 
-  public generate(config: any) {
+  public generate(config?: ConfigType) {
 
     // Get the keys of the fields
     const keys = Object.keys(this.fields)
