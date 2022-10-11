@@ -10,7 +10,7 @@ type FunctionRequestHandler = (request: Request, response: Response, params ? : 
 
 type RequestHandlerType = FunctionRequestHandler | FAAbstractModel | FAAbstractTransformer
 
-type MethodType = "GET" | "POST" | "DELETE" | "PUT"
+type MethodType = "GET" | "POST" | "DELETE" | "PUT" | "OPTIONS" | "PATCH" | "HEAD" | string
 
 type MethodRequestHanderType = {
   [key in MethodType] ? : RequestHandlerType
@@ -35,7 +35,7 @@ class FakerServer {
   // Single method handler , handlers can be a function or a model
   private methodRequestHanders: Map < string, MethodRequestHanderType > = new Map()
 
-  constructor(path: string = 'api', expressInstance ? : Express) {
+  constructor(path: string = '/api', expressInstance ? : Express) {
 
     this.serverPath = path;
     if (expressInstance) {
@@ -87,6 +87,33 @@ class FakerServer {
   }
   public post(path: string, handler: RequestHandlerType) {
     const method = "POST"
+
+    if (!this.methodRequestHanders.has(path)) {
+      this.methodRequestHanders.set(path, {})
+    }
+
+    const _handlers = this.methodRequestHanders.get(path)
+
+    if (_handlers) _handlers[method] = handler
+
+    return this
+  }
+  
+  public delete(path: string, handler: RequestHandlerType) {
+    const method = "DELETE"
+
+    if (!this.methodRequestHanders.has(path)) {
+      this.methodRequestHanders.set(path, {})
+    }
+
+    const _handlers = this.methodRequestHanders.get(path)
+
+    if (_handlers) _handlers[method] = handler
+
+    return this
+  }
+  public put(path: string, handler: RequestHandlerType) {
+    const method = "PUT"
 
     if (!this.methodRequestHanders.has(path)) {
       this.methodRequestHanders.set(path, {})
