@@ -48,7 +48,7 @@ function logMessage(message:string, type:"error"|"info"|"debug"|"warning" = "deb
   
   process.stdout.write("\x1b[0m \n")
   process.stdout.write(colors[type])
-  process.stdout.write(type.toUpperCase())
+  process.stdout.write(" "+type.toUpperCase() +" ")
   process.stdout.write("\x1b[0m ")
   process.stdout.write(message + "\n")
   

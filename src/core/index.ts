@@ -162,6 +162,8 @@ class FakerServer {
           params
         })
       )
+      return true
+      
     }
     return false
   }
