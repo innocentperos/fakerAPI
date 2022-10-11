@@ -1,6 +1,8 @@
 import {FakerServer} from "./core"
 import {Fields, Field} from "./models/fields"
 import { FAModel, FAAbstractModel} from "./models/"
+import { FAAbstractTransformer} from "./transformers"
+import FAListTransformer from "./transformers/list-transformer"
 
 // From src/core/index
 export {
@@ -16,4 +18,10 @@ export {
 export {
   FAModel,
   FAAbstractModel
+}
+
+// From Transfromers 
+export {
+  FAAbstractTransformer,
+  FAListTransformer
 }

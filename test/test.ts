@@ -1,4 +1,4 @@
-import {Fields, FAModel , FakerServer} from "../src/"
+import {Fields, FAModel , FakerServer, FAListTransformer} from "../src/"
 
 const UserModel = new FAModel({
   name: new Fields.NameField(),
@@ -7,9 +7,11 @@ const UserModel = new FAModel({
 
 const server = new FakerServer("/api")
 
-server.get("/user/:id/", UserModel)
+server.get("/user/", new FAListTransformer(UserModel))
+
 server.post("/user/:id/:name", (req, res, params)=>{
-  console.log(params)
+  
   res.send("hello adding user "+params?.name)
 })
+
 server.run()
