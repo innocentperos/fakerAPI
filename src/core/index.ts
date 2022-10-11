@@ -17,7 +17,7 @@ type MethodRequestHanderType = {
 }
 
 type ConfigType = {
-  [key: string | number | symbol]: any,
+  [key: string ]: any,
   request: Request,
   response: Response,
   params ? : ParamsType

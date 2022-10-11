@@ -5,11 +5,12 @@ tags: []
 ---
 
 ## FAModel
+
 This defines the structure and schema of the data FakerAPI will generate
 
 ### Example
-Let say we have a  route ` GET "/api/comments/"` that will return a list of comment object which contains a username, full name and a body, we can fake this with FakerServer using the FAModel and FAListTransformer.
 
+Let say we have a  route `GET "/api/comments/"` that will return a list of comment object which contains a username, full name and a body, we can fake this with FakerServer using the FAModel and FAListTransformer.
 
 ```typescript
 
