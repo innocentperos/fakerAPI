@@ -3,6 +3,8 @@ import {Fields, Field} from "./models/fields"
 import { FAModel, FAAbstractModel} from "./models/"
 import { FAAbstractTransformer} from "./transformers"
 import FAListTransformer from "./transformers/list-transformer"
+import { Router } from "./router"
+import { ViewSet, action, MethodType } from "./router/viewset"
 
 // From src/core/index
 export {
@@ -17,11 +19,25 @@ export {
 // From models.index.ts
 export {
   FAModel,
-  FAAbstractModel
+  FAAbstractModel,
+
+  FAModel as Model,
+  FAAbstractModel as AbstactModel
 }
 
 // From Transfromers 
 export {
   FAAbstractTransformer,
-  FAListTransformer
+  FAListTransformer,
+
+  FAAbstractTransformer as Transfromer,
+  FAListTransformer as ListTransformer
+}
+
+// From Router
+export {
+  Router,
+  ViewSet,
+  action,
+  MethodType
 }

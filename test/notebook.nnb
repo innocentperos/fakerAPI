@@ -1,0 +1,82 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "let pathFormat = \"/auth/:id/password/\""
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let currentPath = \"/auth/4/password/\"\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function buildRegex(format:string){\r\n    let f = format \r\n    f= f.replace(/\\/\\:[\\w|\\s]+\\//, \"/_@/[\\w|\\s]+_@//\")\r\n    \r\n    console.log(f)\r\n    return f\r\n}\r\nconsole.log(buildRegex(pathFormat))"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "/auth/_@/[w|s]+_@//password/",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let stripFirstSigmentPattern = /^\\/([\\w+|\\s+]+)\\//;\r\nlet path = \"/api/test\"\r\nlet actualPath = path.replace(stripFirstSigmentPattern, \"\");\r\nconsole.log({actualPath, path});"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{ actualPath: 'test', path: 'api/test' }",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

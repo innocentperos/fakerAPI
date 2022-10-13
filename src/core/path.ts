@@ -39,8 +39,8 @@ function isMatch(pathFormat: string, currentPath: string, stripEnd:boolean = fal
   }
   
   //Spliting both the current and path to an array with separator / 
-  let strippedPath = pathFormat.trim()
-  let strippedCurrentPath = currentPath.trim()
+  let strippedPath = pathFormat.trim().replace(/^\//,"")
+  let strippedCurrentPath = currentPath.trim().replace(/^\//,"")
   
   
   

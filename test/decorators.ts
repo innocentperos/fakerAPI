@@ -40,7 +40,7 @@ function viewSetFactory(target: (typeof View )){
         return 
     }
 
-    let actions = proto.__actions__?.keys()
+    let actions = Array.from(proto.__actions__?.keys())
 
     let instance = new (target as new()=>any)()
     

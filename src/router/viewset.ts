@@ -1,6 +1,6 @@
 import {Request, Response} from "express"
 
-type MethodType = "GET" | "POST" | "DELETE" | "PUT" | "PATCH" | "HEAD"
+type MethodType = "GET" | "POST" | "DELETE" | "PUT" | "PATCH" | "HEAD" | "INFO"
 
 type ActionMethodHandlerType =  (request:Request, response:Response, id?:number|string)=>void
 
@@ -62,17 +62,6 @@ function action(detail:boolean = false, methods: MethodType[] = ["GET"],pathName
   }
   
 }
-
-function __extractPaths(view:typeof ViewSet, root: string = "") {
-  //extract the blueprint
-  let blueprint = ((view as any).prototype as ViewSetType)
-
-  // Extraxt the meta data that was added to the viewset class by the action decorator
-  let paths:string[] = Array.from(blueprint.__paths__.keys())
-  paths = paths.map(path=>root+path)
-  return paths
-}
-
 
 export {
   ViewSet, ViewSetType, MethodType, ActionMethodHandlerType, ActionHandlerType,  action
