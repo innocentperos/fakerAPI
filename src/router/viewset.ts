@@ -51,6 +51,10 @@ function action(detail:boolean = false, methods: MethodType[] = ["GET"],pathName
       })
       
       let path:string = (pathName?pathName:actionKey) +"/"
+      
+      if(path.startsWith("/")){
+        path.replace(/^\//,""); 
+      }
       if(detail){
         path = ":id/" + path
       }

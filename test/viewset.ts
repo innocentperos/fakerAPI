@@ -1,4 +1,5 @@
-// import {ViewSet, MethodType, action} from "./../src/router/viewset"
+/** 
+ //import {ViewSet, MethodType, action} from "./../src/router/viewset"
 // import {Router} from "./../src/router/"
 
 // class UserViewSet extends ViewSet{
@@ -40,6 +41,7 @@
 // const router = new Router("api")
 // router.register("auth", UserViewSet)
 // router.on(request, response)
+**/
 
 
 import { Request, Response } from "express"
@@ -67,6 +69,11 @@ class AuthViewSet extends ViewSet{
     response.send(
       UserModel.generate()
     )
+  }
+  
+  @action(true, ["POST","GET"],"profile/me")
+  profile(request:Request, response:Response){
+    response.send(UserModel.generate())
   }
 
 }
