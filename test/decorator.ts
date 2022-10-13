@@ -1,7 +1,11 @@
 import {ViewSet, action} from "./../src/core/viewset"
 import {Router} from "./../src/core/router"
+import {Request, Response} from "express"
 
 class UserViewSet extends ViewSet{
+  
+  user:string = "innocent peros"
+  
   
   @action()
   login(){
@@ -14,7 +18,8 @@ class UserViewSet extends ViewSet{
   }
   
   @action(true)
-  profile(){
+  profile(request:Request, response:Response, id:number){
+    console.log(this.user, id)
     
   }
   
@@ -29,5 +34,4 @@ const router = new Router()
 
 router.register("user", UserViewSet)
 
-console.log(router.urls)
-console.log(router.getViewsetUrls("user"))
+router.handle("user/1/profile/")

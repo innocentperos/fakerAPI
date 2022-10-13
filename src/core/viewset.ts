@@ -1,10 +1,15 @@
+import {Request, Response} from "express"
+
 type MethodType = "GET" | "POST" | "DELETE" | "PUT" | "PATCH" | "HEAD"
+
+type ActionMethodHandlerType =  (request:Request, response:Response, id?:number|string)=>void
 
 type ActionHandlerType = {
   methods: MethodType[],
   description: string,
   method:string,
-  detail: boolean
+  detail: boolean,
+  handler: ActionMethodHandlerType
 }
 
 type ViewSetType = {
@@ -19,6 +24,30 @@ abstract class ViewSet {
     
   }
   
+  public init(viewset: typeof ViewSet){
+    
+    let blueprint = viewset.prototype as any as ViewSetType
+    
+    
+    
+    //console.log(blueprint)
+    
+    let context = this as any
+    if (typeof context.get == "function") {
+      
+    } else {
+      if (!blueprint.__actions__?.has("")) {
+        blueprint.__actions__.set("",{
+          methods:["GET"],
+          method:"get",
+          handler: context.get,
+          detail: false,
+          description:"Get request"
+        })
+      }
+    }
+  }
+
 }
 
 function action(detail:boolean = false, methods: MethodType[] = ["GET"], description:string = "No Description"){
@@ -34,7 +63,8 @@ function action(detail:boolean = false, methods: MethodType[] = ["GET"], descrip
         methods: methods,
         description: description,
         method:actionKey,
-        detail:detail
+        detail:detail,
+        handler: actionHandler.value
       })
     }
     
@@ -42,5 +72,5 @@ function action(detail:boolean = false, methods: MethodType[] = ["GET"], descrip
 }
 
 export {
-  ViewSet, ViewSetType, MethodType, action
+  ViewSet, ViewSetType, MethodType, ActionMethodHandlerType,  action
 }
