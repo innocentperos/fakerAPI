@@ -14,11 +14,11 @@ API Faker can understand and parse request path that contains parameters
 
 3. ✨Neat logging
 
-API Faker provides a good looking logging feature that allows you to see which points your frontend application is calling.
+API Faker provides a good looking logging feature that allows you to see which points your frontend application is calling
 
 4. 🔶 Uses Model 
 
-Models allow you to define how the data the server will provide should look like.
+Models allow you to define how the data the server will provide should look like
 
 5. 🔶🔹Nestable Model
 
@@ -115,11 +115,9 @@ const CommentModel = new Model({
 ```
 
  API Faker two classes for creating models.
- 
  1. `AbstractModel` class
  
 This is the main abstract class that any custom model extends.This class has only one abstract method `generate(request, params)` which gets call when generating the random content.
-
  2. `Model` class
  
 This is the genreic class that API Faker provides for quickly defining your model structure and generating random content from the model
