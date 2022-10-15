@@ -22,7 +22,7 @@ A lightweight fully OOP fake api content generator and provider server, written 
 
 5. 🔶🔹Nestable Model
     
-  Allows deep nesting of models within models to create more complex structure
+    Allows deep nesting of models within models to create more complex structure
 
 6. 🏗 Highly customizable
 
