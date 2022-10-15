@@ -4,7 +4,7 @@ import { FAModel, FAAbstractModel} from "./models/"
 import { FAAbstractTransformer} from "./transformers"
 import FAListTransformer from "./transformers/list-transformer"
 import { Router } from "./router"
-import { ViewSet, action, MethodType } from "./router/viewset"
+import { ViewSet, MethodType } from "./router/viewset"
 
 // From src/core/index
 export {
@@ -34,10 +34,11 @@ export {
   FAListTransformer as ListTransformer
 }
 
+const action = ViewSet.action 
 // From Router
 export {
   Router,
   ViewSet,
-  action,
+  action ,
   MethodType
 }

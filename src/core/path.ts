@@ -17,10 +17,10 @@ type ParamsType = {
  * 
  * >```json
  * >{
-   >"id" : 5
- >}
- >```
- 
+ * >"id" : 5
+ * >}
+ * >```
+ *
  * @param {string} pathFormat The path format to compare the currentPath to
  * 
  * @param {string} currentPath The actual path which will be compared to the format and data will be extracted
@@ -29,16 +29,16 @@ type ParamsType = {
  * 
  * @returns {undefined | ParamsType} Undefined if currentPath does not match pathFormat, else an Object that contains all exracted params with key as the param name and the value as the extacted data
  * .
- * */
+ */
 function isMatch(pathFormat: string, currentPath: string, stripEnd:boolean = false):undefined | ParamsType{
   
-  /*This path is a static path return an empty parameter list, not regex comparison required to be performed
+  /* This path is a static path return an empty parameter list, not regex comparison required to be performed
   */
-  if (pathFormat == currentPath) return {
+  if (pathFormat === currentPath) return {
 
   }
   
-  //Spliting both the current and path to an array with separator / 
+  // Spliting both the current and path to an array with separator / 
   let strippedPath = pathFormat.trim().replace(/^\//,"")
   if(!strippedPath.endsWith("/")){
     strippedPath = strippedPath+"/"
@@ -48,12 +48,11 @@ function isMatch(pathFormat: string, currentPath: string, stripEnd:boolean = fal
     strippedCurrentPath = strippedCurrentPath + "/"
   }
   
+  const _path = strippedPath.split("/")
+  const _currentPath = strippedCurrentPath.split("/")
   
-  let _path = strippedPath.split("/")
-  let _currentPath = strippedCurrentPath.split("/")
-  
-  //This will eliminate / at the end of paths 
-  //example /users/ will become /users
+  // This will eliminate / at the end of paths 
+  // example /users/ will become /users
   if(stripEnd){
     if(_path[_path.length-1].length<1){
       _path.pop()
@@ -104,7 +103,7 @@ function isMatch(pathFormat: string, currentPath: string, stripEnd:boolean = fal
         break
         
       }else if(_p.match(optionalPattern)){
-        //Ignore this path of the pattern and move to the next segment
+        // Ignore this path of the pattern and move to the next segment
         continue
       }else {
         failed = true
@@ -117,7 +116,7 @@ function isMatch(pathFormat: string, currentPath: string, stripEnd:boolean = fal
   // Paths did not match,  return undefined (nothing)
   if (failed) return
   
-  //Paths matches all return the parsed parameters
+  // Paths matches all return the parsed parameters
   return params
 
 }

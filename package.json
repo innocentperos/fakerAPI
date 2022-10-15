@@ -2,21 +2,30 @@
   "name": "fakerapi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "node ./lib/test/test.js"
+    "test": "node ./lib/test/test.js",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json"
   },
-  "author": "",
+  "author": "Innocent Saidu Peros",
+  "keywords":["fake-api","fake","fakerjs","server","api","easy"],
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.14",
+    "prettier": "^2.7.1",
     "ts-node-dev": "^2.0.0",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {
     "@faker-js/faker": "^7.5.0",
-    "express": "^4.18.2",
-    "install": "^0.13.0",
-    "npm": "^8.19.2"
-  }
+    "express": "^4.18.2"
+  },
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/innocentperos/fakerAPI.git"
+  },
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts"
 }

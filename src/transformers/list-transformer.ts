@@ -11,7 +11,7 @@ class FAListTransformer<T extends FAAbstractModel> extends FAAbstractTransformer
   }
   
   public transform (requesr:Request, params:ParamsType) {
-    let copy = []
+    const copy = []
     
     for(let index = 0; index <10 ; index++){
       copy.push((this.image as FAAbstractModel).generate())

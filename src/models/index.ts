@@ -1,11 +1,7 @@
 import { Fields, Field } from "./fields"
 import {ParamsType} from "./../core"
 import { Request } from "express"
-abstract class FAAbstractModel {
-
-  public abstract generate(request?:Request,params?:ParamsType): object | any[] | string | number
-}
-
+import FAAbstractModel from "./abstract-model"
 type FieldFunctionType = (config?: any) => string | any[] | number | object
 
 type FieldsType = {
@@ -35,7 +31,7 @@ class FAModel extends FAAbstractModel {
       if (typeof field === "string" || typeof field === "number") {
         build[key] = field
       } else if (typeof field === "function") {
-        build[key] = (field as Function)(request,params)
+        build[key] = (field as (request?:Request, params?:ParamsType)=>any)(request,params)
       } else if (field instanceof Field) {
         build[key] = (field as Field).generate()
       }else if (field instanceof Array) {
