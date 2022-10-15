@@ -71,7 +71,7 @@ class AuthViewSet extends ViewSet{
     )
   }
   
-  @action(true, ["POST","GET"],"profile/me")
+  @action(true, ["POST","GET"],undefined)
   profile(request:Request, response:Response){
     response.send(UserModel.generate())
   }

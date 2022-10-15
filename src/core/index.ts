@@ -79,7 +79,7 @@ class FakerServer {
     return new FakerServer(path, expressInstance);
   }
 
-  public run(port: number = 8800) {
+  public run(port: number = 7700) {
     if (this.appPassed) {
       logMessage(
         "Message an instance of Express app was pass to the constructor, no need to call run, the Faker server will start the moment the Express app starts",
