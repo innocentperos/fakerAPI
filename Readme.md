@@ -21,12 +21,14 @@ A lightweight fully OOP fake api content generator and provider server, written 
     Models allow you to define how the data the server will provide should look like
 
 5. 🔶🔹Nestable Model
-    Allows deep nesting of models within models to create more complex structure
-6. 🏗 High customization
+    
+  Allows deep nesting of models within models to create more complex structure
+
+6. 🏗 Highly customizable
 
 ## 📦 Install
 
-`npm install --save-dev @api-faker`
+`npm install --save-dev api-faker`
 
 ## Example
 
@@ -57,7 +59,7 @@ It constructor accept two
 
 > ```typsecript
 >
-> constructor(path?="/api", expressInstance?)
+> constructor(path="/api", expressInstance?)
 > ```
 
 1. `path:string`
