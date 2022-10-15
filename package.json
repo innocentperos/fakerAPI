@@ -1,14 +1,19 @@
 {
   "name": "fakerapi",
   "version": "1.0.0",
-  "description": "",
+  "description": "A full customizible api faking package that allows you to mock , clone and fake API with fake yet realistic data",
   "scripts": {
     "test": "node ./lib/test/test.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm run lint",
+    "preversion" : "npm run lint",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags"
   },
   "author": "Innocent Saidu Peros",
-  "keywords":["fake-api","fake","fakerjs","server","api","easy"],
+  "keywords":["fake-api","fake","fakerjs","server","api","easy","mock","mocking","moking api","faking api","static api", "dynamic api", "test api","clone api"],
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.14",
@@ -26,6 +31,11 @@
     "type":"git",
     "url":"https://github.com/innocentperos/fakerAPI.git"
   },
-  "main": "lib/src/index.js",
+  "bugs": {
+    "url":"https://github.com/innocentperos/fakerAPI/issues"
+  },
+  "homepage" :"https://github.com/innocentperos/fakerAPI#readme",
+  "files": "[lib/**/*]",
+  "main":"lib/src/index.js",
   "types": "lib/src/index.d.ts"
 }

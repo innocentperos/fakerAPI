@@ -2,3 +2,5 @@ node_modules
 test/
 src/
 tsconfig.json
+tslint.json
+.prettierrc
