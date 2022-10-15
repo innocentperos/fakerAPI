@@ -69,7 +69,7 @@
                         {
                             "mime": "application/vnd.code.notebook.stdout",
                             "value": [
-                                "{ actualPath: 'test', path: 'api/test' }",
+                                "{ actualPath: 'test', path: '/api/test' }",
                                 "",
                                 ""
                             ]
