@@ -181,6 +181,17 @@ const Fields = {
   Email: new EmailField(),
   Avatar: new AvatarField(),
   Gender: new GenderField(),
+  UserName: new UsernameField(),
+  PhoneNumber: new PhoneNumberField(),
+  Text:new TextField(),
+  ID: new IDField(),
+  SexType: new SexTypeField(),
+  Image: new ImageField(),
+  Country: new CountryField(),
+  CountryCode: new CountryCodeField(),
+  State: new StateField(),
+  Location: new LocationField(),
+  Address: new FullAddressField(),
 };
 
 export { Fields, Field };
