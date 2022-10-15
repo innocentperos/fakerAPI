@@ -1,9 +1,9 @@
 import { Fields, Field } from "./fields"
-import {ConfigType} from "./../core"
-
+import {ParamsType} from "./../core"
+import { Request } from "express"
 abstract class FAAbstractModel {
 
-  public abstract generate(config?: ConfigType): object | any[] | string | number
+  public abstract generate(request?:Request,params?:ParamsType): object | any[] | string | number
 }
 
 type FieldFunctionType = (config?: any) => string | any[] | number | object
@@ -21,7 +21,7 @@ class FAModel extends FAAbstractModel {
     this.fields = fields
   }
 
-  public generate(config?: ConfigType) {
+  public generate(params?: ParamsType, request?:Request) {
 
     // Get the keys of the fields
     const keys = Object.keys(this.fields)
@@ -35,7 +35,7 @@ class FAModel extends FAAbstractModel {
       if (typeof field === "string" || typeof field === "number") {
         build[key] = field
       } else if (typeof field === "function") {
-        build[key] = (field as Function)(config)
+        build[key] = (field as Function)(request,params)
       } else if (field instanceof Field) {
         build[key] = (field as Field).generate()
       }else if (field instanceof Array) {

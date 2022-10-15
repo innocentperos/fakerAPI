@@ -1,5 +1,6 @@
+import { Request } from "express";
 import {FAAbstractModel} from "../" 
-import {ConfigType} from "../core/"
+import {ParamsType} from "../core/"
 
 abstract class FAAbstractTransformer{
   
@@ -10,7 +11,7 @@ abstract class FAAbstractTransformer{
     
   }
   
-  public abstract transform(config: ConfigType):any
+  public abstract transform(request?: Request, params?: ParamsType):any
 }
 
 export {

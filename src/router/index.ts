@@ -128,9 +128,9 @@ class Router {
           if(request.method.toUpperCase() === "OPTIONS") {
             
             response.setHeader("Accept", actionHandler.methods.join(" , "))
-            response.send()
+            // response.send()
             
-            return true;
+            return;
           }
           // Handler does not handle this request type skip it
           response.status(404)

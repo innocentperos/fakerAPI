@@ -1,6 +1,7 @@
+import { Request } from "express"
 import {FAAbstractTransformer} from "."
 import {FAAbstractModel} from "../"
-import {ConfigType} from "../core/"
+import {ParamsType} from "../core/"
 
 
 class FAListTransformer<T extends FAAbstractModel> extends FAAbstractTransformer{
@@ -9,7 +10,7 @@ class FAListTransformer<T extends FAAbstractModel> extends FAAbstractTransformer
     super(model)
   }
   
-  public transform (config:ConfigType) {
+  public transform (requesr:Request, params:ParamsType) {
     let copy = []
     
     for(let index = 0; index <10 ; index++){
