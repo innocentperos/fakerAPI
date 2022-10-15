@@ -10,46 +10,46 @@ import { Router as FARouter } from "../router";
 type FunctionRequestHandler = (
   request: Request,
   response: Response,
-  params ? : ParamsType
+  params?: ParamsType
 ) => void;
 
-type RequestHandlerType = |
-  FunctionRequestHandler |
-  FAAbstractModel |
-  FAAbstractTransformer;
+type RequestHandlerType =
+  | FunctionRequestHandler
+  | FAAbstractModel
+  | FAAbstractTransformer;
 
-type MethodType = |
-  "GET" |
-  "POST" |
-  "DELETE" |
-  "PUT" |
-  "OPTIONS" |
-  "PATCH" |
-  "HEAD" |
-  string;
+type MethodType =
+  | "GET"
+  | "POST"
+  | "DELETE"
+  | "PUT"
+  | "OPTIONS"
+  | "PATCH"
+  | "HEAD"
+  | string;
 
 /**
- *  Each `key` represent a method type, 
+ *  Each `key` represent a method type,
  *
  */
 type MethodRequestHanderType = {
-    [key in MethodType] ? : RequestHandlerType;
+  [key in MethodType]?: RequestHandlerType;
 };
 
 type ConfigType = {
-    [key: string]: any;
+  [key: string]: any;
   request: Request;
   response: Response;
-  params ? : ParamsType;
+  params?: ParamsType;
 };
 
 /**
  * This is the class that is been used to instantiate the api faker server instance
- * 
+ *
  */
 class FakerServer {
   /**
-   * @type string specific the route the server would be running on 
+   * @type string specific the route the server would be running on
    */
   private serverPath: string;
 
@@ -58,12 +58,12 @@ class FakerServer {
   private appPassed: boolean = false;
 
   // Single method handler , handlers can be a function or a model
-  private methodRequestHanders: Map < string, MethodRequestHanderType > =
+  private methodRequestHanders: Map<string, MethodRequestHanderType> =
     new Map();
 
-  private routerMaps: Map < string, FARouter > = new Map();
+  private routerMaps: Map<string, FARouter> = new Map();
 
-  constructor(path: string = "/api", expressInstance ? : Express) {
+  constructor(path: string = "/api", expressInstance?: Express) {
     this.serverPath = path;
     if (expressInstance) {
       this.appPassed = true;
@@ -84,11 +84,11 @@ class FakerServer {
 
   /**
    * Returns an instance of a FakerServer with the given express application instance
-   * 
+   *
    * @param expressInstance An express application instance
    * @param path [string="/api"] The path the Faker Server will be running on, on the express application
    * @returns An instance of FakerServer
-   * 
+   *
    */
   public static from(
     expressInstance: Express,
@@ -125,7 +125,11 @@ class FakerServer {
    * @param handler - The handler it self
    * @param method - The request method type the handle should accept
    */
-  private __addMethodRequestHandler(path: string, handler: RequestHandlerType, method: string) {
+  private __addMethodRequestHandler(
+    path: string,
+    handler: RequestHandlerType,
+    method: string
+  ) {
     if (!this.methodRequestHanders.has(path)) {
       this.methodRequestHanders.set(path, {});
     }
@@ -133,67 +137,66 @@ class FakerServer {
     const _handlers = this.methodRequestHanders.get(path);
 
     if (_handlers) _handlers[method] = handler;
-
   }
 
   /**
-   * Adds a new GET request handler to the faker server
+   * Adds a new GET request handler to the faker server instance
    * @param path - The url the handler should handle
    * @param handler - The handler it self
-   * 
+   *
    */
   public get(path: string, handler: RequestHandlerType) {
-    this.__addMethodRequestHandler(path, handler, "GET")
+    this.__addMethodRequestHandler(path, handler, "GET");
     return this;
   }
 
   /**
-   * Adds a new POST request handler to the faker server
+   * Adds a new POST request handler to the faker server instance
    * @param path - The url the handler should handle
    * @param handler - The handler it self
-   * 
+   *
    */
   public post(path: string, handler: RequestHandlerType) {
-    this.__addMethodRequestHandler(path, handler, "POST")
+    this.__addMethodRequestHandler(path, handler, "POST");
     return this;
   }
   /**
-   * Adds a new DELETE request handler to the faker server
+   * Adds a new DELETE request handler to the faker server instance
    * @param path - The url the handler should handle
    * @param handler - The handler it self
-   * 
+   *
    */
   public delete(path: string, handler: RequestHandlerType) {
-    this.__addMethodRequestHandler(path, handler, "DELETE")
+    this.__addMethodRequestHandler(path, handler, "DELETE");
     return this;
   }
   /**
-   * Adds a new PUT request handler to the faker server
+   * Adds a new PUT request handler to the faker server instance
    * @param path - The url the handler should handle
    * @param handler - The handler it self
-   * 
+   *
    */
   public put(path: string, handler: RequestHandlerType) {
-    this.__addMethodRequestHandler(path, handler, "PUT")
+    this.__addMethodRequestHandler(path, handler, "PUT");
     return this;
   }
   /**
-   * Adds a new PATCH request handler to the faker server
+   * Adds a new PATCH request handler to the faker server instance
    * @param path - The url the handler should handle
    * @param handler - The handler it self
-   * 
+   *
    */
   public patch(path: string, handler: RequestHandlerType) {
-    this.__addMethodRequestHandler(path, handler, "PATCH")
+    this.__addMethodRequestHandler(path, handler, "PATCH");
     return this;
   }
 
   /**
    * Register a new Router to the faker server instance
    * @param path - The path the router should handle request to (avoid using paths that ends with a /)
-   * @router - The router instance
-   * 
-   * @remark This method can throw error if the @path ends with /
+   * @param router - The router instance
+   *
+   * @remark This method can throw error if the `path` ends with /
    */
   public route(path: string, router: FARouter) {
     try {
@@ -218,7 +221,7 @@ class FakerServer {
   }
   /**
    * Handles request that matches a specific static path that has a method handler registered to it
-   * 
+   *
    * @param path - The url the handler should handle
    * @param handler - The handler it self
    * @param method - The request method type the handle should accept
@@ -227,37 +230,33 @@ class FakerServer {
     request: Request,
     response: Response,
     path: string,
-    params ? : ParamsType
+    params?: ParamsType
   ): boolean {
-    
     // Gets all method handlers associated to the path
     const handlers = this.methodRequestHanders.get(path);
 
     const method = request.method.toUpperCase() as any as MethodType;
-    
+
     // The method is an Option request,Add the handlers methods to the response Accept header
     if (!(method in (handlers as MethodRequestHanderType))) {
       if (method === "OPTIONS") {
-        response.setHeader("Accept", Object.keys(handlers!).join(","))
+        response.setHeader("Accept", Object.keys(handlers!).join(","));
       }
-      return false
-    };
+      return false;
+    }
 
     const handler = (handlers as MethodRequestHanderType)[method];
-    
+
     // Could not the a handler for the request method type
-    if(!handler) return false
-    
-    
+    if (!handler) return false;
+
     // The handler was is a function
     if (typeof handler === "function") {
       (handler as FunctionRequestHandler)(request, response, params);
       return true;
     } else if (handler instanceof FAAbstractModel) {
       // Handler is a model send the model's generated data
-      response.send(
-        (handler as FAAbstractModel).generate(request, params)
-      );
+      response.send((handler as FAAbstractModel).generate(request, params));
       return true;
     } else if (handler instanceof FAAbstractTransformer) {
       // The handler is a transformer call the transform function and send the data it returns
@@ -268,44 +267,42 @@ class FakerServer {
     }
     return false;
   }
-  
+
   /**
    * Called internally to check if there exist a router that can handle a request, after confirming that there is no method handler found to handle the request
    * @param request - The request object
    * @param response - The response object
    * path - The request path without the server prefix path
-   * @returns - true if the request handled by a router or false if there was no router to handle the request 
+   * @returns - true if the request handled by a router or false if there was no router to handle the request
    */
   private _handleRouterRequest(
     request: Request,
     response: Response,
     path: string
   ): boolean {
-    
     // Get all the routers path prefix
-    const routersPath = Array.from(this.routerMaps.keys())
-    
+    const routersPath = Array.from(this.routerMaps.keys());
+
     // loop through the routerPath to see those that match the start of the path
     for (const routerPath of routersPath) {
       if (path.startsWith(routerPath)) {
-        
         // A match was found
         // strip the prefix of the router from the path
         const _m = path.replace(routerPath, "");
-        
+
         // This insures that the right router is select since router prefix are not allowed to end with /
-        
+
         /**
          * This plevent for example
          * router prefix is router/game
          * then path router/game/more
          * should match the router but
-         * path = router/game//more will not macth 
+         * path = router/game//more will not macth
          */
         if (!_m.startsWith("/")) continue;
 
-        const router = this.routerMaps.get(routerPath) !;
-        
+        const router = this.routerMaps.get(routerPath)!;
+
         // pass the request to the found router and see if it can handle the request
         const result = router.on(request as any, response, _m);
 
@@ -326,7 +323,7 @@ class FakerServer {
   private onNewRequest(request: Request, response: Response) {
     const path = request.path.replace(this.serverPath, "");
 
-    if (request.method === "OPTIONS") response.setHeader("Accept", '')
+    if (request.method === "OPTIONS") response.setHeader("Accept", "");
 
     logRequest(request);
     let handled = false;
@@ -362,10 +359,11 @@ class FakerServer {
 
     // no methods or routers available to handle such request
     if (handled === false) {
-      if (request.method !== "OPTIONS") logMessage(
-        `Unhandled request made  to \`${request.method.toUpperCase()} ${path}\``,
-        "error"
-      );
+      if (request.method !== "OPTIONS")
+        logMessage(
+          `Unhandled request made  to \`${request.method.toUpperCase()} ${path}\``,
+          "error"
+        );
 
       try {
         if (request.method.toUpperCase() === "OPTIONS") {

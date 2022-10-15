@@ -1,44 +1,33 @@
-import {FakerServer} from "./core"
-import {Fields, Field} from "./models/fields"
-import { FAModel, FAAbstractModel} from "./models/"
-import { FAAbstractTransformer} from "./transformers"
-import FAListTransformer from "./transformers/list-transformer"
-import { Router } from "./router"
-import { ViewSet, MethodType } from "./router/viewset"
+import { FakerServer } from "./core";
+import { Fields, Field } from "./models/fields";
+import { Model, FAAbstractModel } from "./models/";
+import { FAAbstractTransformer } from "./transformers";
+import ListTransformer from "./transformers/list-transformer";
+import { Router } from "./router";
+import { ViewSet, MethodType } from "./router/viewset";
 
 // From src/core/index
-export {
-  FakerServer,
-}
+export { FakerServer };
 
 // From fields.ts
-export {
-  Fields, Field
-}
+export { Fields, Field };
 
 // From models.index.ts
 export {
-  FAModel,
+  Model as FAModel,
   FAAbstractModel,
+  Model as Model,
+  FAAbstractModel as AbstactModel,
+};
 
-  FAModel as Model,
-  FAAbstractModel as AbstactModel
-}
-
-// From Transfromers 
+// From Transfromers
 export {
   FAAbstractTransformer,
-  FAListTransformer,
-
+  ListTransformer as FAListTransformer,
   FAAbstractTransformer as Transfromer,
-  FAListTransformer as ListTransformer
-}
+  ListTransformer as ListTransformer,
+};
 
-const action = ViewSet.action 
+const action = ViewSet.action;
 // From Router
-export {
-  Router,
-  ViewSet,
-  action ,
-  MethodType
-}
+export { Router, ViewSet, action, MethodType };

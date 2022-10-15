@@ -1,31 +1,30 @@
-import { Request, Response } from "express"
-import { MethodType } from "./../core"
+import { Request, Response } from "express";
+import { MethodType } from "./../core";
 
-type ActionMethodHandlerType = (request: Request, response: Response, id ? : number | string) => void
+type ActionMethodHandlerType = (
+  request: Request,
+  response: Response,
+  id?: number | string
+) => void;
 
 type ActionHandlerType = {
-  methods: MethodType[],
-  description: string,
-  method: string,
-  detail: boolean,
-  handler: ActionMethodHandlerType
-}
+  methods: MethodType[];
+  description: string;
+  method: string;
+  detail: boolean;
+  handler: ActionMethodHandlerType;
+};
 
 type ViewSetType = {
-  __actions__: Map < string,
-  ActionHandlerType > ,
+  __actions__: Map<string, ActionHandlerType>;
 
   // Maps the actual path to the method name
-  __paths__: Map < string,
-  string > ,
-
-}
-
+  __paths__: Map<string, string>;
+};
 
 abstract class ViewSet {
-
   public description(): string {
-    return "No description"
+    return "No description";
   }
 
   /**
@@ -36,10 +35,14 @@ abstract class ViewSet {
    * description - The discription od the Viewset route, (used to generated the api documentation)
    * @returns - The decorator function _action
    */
-  public static action(detail: boolean = false, methods: MethodType[] = ["GET"], pathName: string | undefined | null, description: string = "No Description") {
-    return _action(detail, methods, pathName, description)
+  public static action(
+    detail: boolean = false,
+    methods: MethodType[] = ["GET"],
+    pathName: string | undefined | null,
+    description: string = "No Description"
+  ) {
+    return _action(detail, methods, pathName, description);
   }
-
 }
 
 /**
@@ -50,22 +53,27 @@ abstract class ViewSet {
  * description - The discription od the Viewset route, (used to generated the api documentation)
  * @returns - The decorator function _action
  */
-function _action(detail: boolean = false, methods: MethodType[] = ["GET"], pathName: string | undefined | null, description: string = "No Description") {
+function _action(
+  detail: boolean = false,
+  methods: MethodType[] = ["GET"],
+  pathName: string | undefined | null,
+  description: string = "No Description"
+) {
+  return (
+    target: ViewSet,
+    actionKey: string,
+    actionHandler: PropertyDescriptor
+  ) => {
+    const viewset = target as any as ViewSetType;
 
-  return (target: ViewSet, actionKey: string, actionHandler: PropertyDescriptor) => {
-
-    const viewset = (target as any) as ViewSetType
-    
     // Insuring that the viewset class object as __action__ and __path__ defined
-    if (!viewset.__actions__)
-      viewset.__actions__ = new Map()
-    if (!viewset.__paths__)
-      viewset.__paths__ = new Map()
-      
-      /***
-       * The __actions__ contains a Map mapping various handlers to a handler method name
-       * while the __paths__ contains various url paths mapping to the method name
-       */
+    if (!viewset.__actions__) viewset.__actions__ = new Map();
+    if (!viewset.__paths__) viewset.__paths__ = new Map();
+
+    /***
+     * The __actions__ contains a Map mapping various handlers to a handler method name
+     * while the __paths__ contains various url paths mapping to the method name
+     */
 
     if (!viewset.__actions__.has(actionKey)) {
       viewset.__actions__.set(actionKey, {
@@ -73,24 +81,21 @@ function _action(detail: boolean = false, methods: MethodType[] = ["GET"], pathN
         description,
         method: actionKey,
         detail,
-        handler: actionHandler.value
-      })
+        handler: actionHandler.value,
+      });
 
-      let path: string = (pathName ? pathName : actionKey) + "/"
+      let path: string = (pathName ? pathName : actionKey) + "/";
 
       if (path.startsWith("/")) {
         path.replace(/^\//, "");
       }
       if (detail) {
-        path = ":id/" + path
+        path = ":id/" + path;
       }
 
-      viewset.__paths__.set(path, actionKey)
-
+      viewset.__paths__.set(path, actionKey);
     }
-
-  }
-
+  };
 }
 
 export {
@@ -98,5 +103,5 @@ export {
   ViewSetType,
   MethodType,
   ActionMethodHandlerType,
-  ActionHandlerType
-}
+  ActionHandlerType,
+};

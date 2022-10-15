@@ -1,4 +1,7 @@
-node_modules
-test/
-src/
+src
+test
 tsconfig.json
+tslint.json
+.prettierrc
+.gitignore
+node_modules

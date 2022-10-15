@@ -32,7 +32,7 @@ class NameField extends Field {
 
 class EmailField extends Field {
   public domain: string | undefined;
-  public constructor(domain ? : string) {
+  public constructor(domain?: string) {
     super();
     this.domain = domain;
   }
@@ -56,7 +56,7 @@ class TextField extends Field {
 
 class PhoneNumberField extends Field {
   format: string | undefined;
-  constructor(format ? : string) {
+  constructor(format?: string) {
     super();
   }
   public generate() {
@@ -141,19 +141,19 @@ class FullAddressField extends Field {
 }
 
 class NearByField extends Field {
-  
   location: [lat: number, lng: number] | undefined;
-  
+
   distance: number;
-  
-  constructor(location ? : [lat: number, lng: number], distance = 5) {
+
+  constructor(location?: [lat: number, lng: number], distance = 5) {
     super();
     this.location = location;
     this.distance = distance;
   }
   public generate() {
     return faker.address.nearbyGPSCoordinate(
-      this.location, this.distance,
+      this.location,
+      this.distance,
       true
     );
   }

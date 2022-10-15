@@ -1,19 +1,16 @@
 import { Request } from "express";
-import {FAAbstractModel} from "../" 
-import {ParamsType} from "../core/"
+import { ParamsType } from "../core/";
 
-abstract class FAAbstractTransformer{
-  
-  protected image: FAAbstractModel | FAAbstractTransformer  ;
-  constructor(image : FAAbstractTransformer | FAAbstractModel){
-    
-    this.image = image
-    
-  }
-  
-  public abstract transform(request?: Request, params?: ParamsType):any
+/**
+ * The abstract class from which custom Transformers can be created from by extending it
+ */
+abstract class FAAbstractTransformer {
+  /**
+   *
+   * @param request An Express Request object of the current request
+   * @param params The extracted paramters of the request path
+   */
+  public abstract transform(request?: Request, params?: ParamsType): any;
 }
 
-export {
-  FAAbstractTransformer
-}
+export { FAAbstractTransformer };
