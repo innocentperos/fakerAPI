@@ -26,7 +26,7 @@ A lightweight fully OOP fake api content generator and provider server, written 
 
 ## 📦 Install
 
-`npm install --save-dev @faker-js/faker`
+`npm install --save-dev @api-faker`
 
 ## Example
 
