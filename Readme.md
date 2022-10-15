@@ -91,6 +91,47 @@ It constructor accept two
 
 9. `route(path:string, handler:Router)`  
     This method is used to provider a `Router` that will handle multiple request to points that are have the `path` prefix
+  
+A **`RequestHandler`** can be a Model class instance, a `Transformer` or a Function with the signature `(request, response,params)=>void` where `request` and `response` are an express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
+
+**Examples of RequestHandlers**
+```javascript
+const { FakerServer, Model, Fields, ListTransformer } = require("api-faker")
+
+const UserModel = new Model({
+  username: new Fields.UsernameField(),
+  name: new Fields.NameField(),
+  followers: function(request, params) {
+    const followFactor = Math.random()
+
+    return Math.floor(followFactor * 100)
+  }
+})
+
+const server = new FakerServer("/api")
+
+// Using a Transformer as a RequestHandler
+server.get("/users/", new ListTransformer(UserModel, 30))
+
+//Using a Model Instance as a RequestHandler
+server.get("/users/:id/", UserModel)
+
+//Using a function as a requestHandler
+server.get("/user/:id/followers", (request, response, param) => {
+  let followers = []
+  let user = UserModel.generate()
+  for (let index = 0; index < 20; index++) {
+    followers.push(UserModel.generate())
+  }
+
+  response.send({
+    user,
+    followers
+  })
+})
+
+server.run(5000)
+```
 
 ### 🔶 Model
 
@@ -117,9 +158,33 @@ const CommentModel = new Model({
  API Faker two classes for creating models.
 
  1. `AbstractModel` class
+    
     This is the main abstract class that any custom model extends.This class has only one abstract method `generate(request, params)` which gets call when generating the random content.
 
  2. `Model` class
-    This is the genreic class that API Faker provides for quickly defining your model structure and generating random content from the model
+    
+    This is the generic class that API Faker provides for quickly defining your model structure and generating random content from the model
 
-    It's constructor accept and object with `key` been the field name of the model and `value` been a `Field` class instance which defines the type of value to be populated into the field.
+    It's constructor accept and object with `key` been the field name of the model and `value` been a `Field`|`function(request:Request, params:{}):any`|`string`|`number`|`object` class instance which defines the type of value to be populated into the field.
+    
+    If the value is not a function or `Field` then the value of the field will be treated as static (Returns the data as it is, do not generate data for this field)
+    
+    If the `field` value is a `function` then the function get called to evaluate the value of model field during data generating.
+    
+    **Example**
+    Model with static fields
+    
+    ```typescript
+    const {Fields, Model} = require("api-faker")
+    
+    Const PostComment = new Model({
+      username:new Fields.UsernameField(),
+      date: new Date("2021-05-07"),
+      reaction : function(request, param){
+        return Math.floor(Math.random()*100)
+      }
+    })
+    ```
+    > Note that the date field of the model is a static value of the date 2021-05-07 , which means everytime an instance of the model is created the date will always be 2021-05-07
+    > While the reaction field is a dynamic field since it value will be determined by the function it was asign to it. The `request` parameter is an express Request object, while the params will contains the parameters extracted from the `request` path.
+    
