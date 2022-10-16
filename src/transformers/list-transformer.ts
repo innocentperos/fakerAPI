@@ -8,7 +8,7 @@ import { ParamsType } from "../core/";
  */
 class ListTransformer extends Transformer {
   /** The Model or Transformer the transformer will generate */
-  protected image: AbstractModel | Transformer;
+  protected model: AbstractModel | Transformer;
 
   /** The number of items the transformer should generate */
   protected count: number;
@@ -18,10 +18,10 @@ class ListTransformer extends Transformer {
    * @param image The Model or transformer to apply the listTransformer
    * @param count The number of `image` item to generate in the array
    */
-  constructor(image: AbstractModel | Transformer, count = 10) {
+  constructor(model: AbstractModel | Transformer, count = 10) {
     super();
 
-    this.image = image;
+    this.model = model;
     this.count = count;
   }
 
@@ -33,13 +33,13 @@ class ListTransformer extends Transformer {
    */
   public transform(request?: Request, params?: ParamsType) {
     const copy = [];
-    if (this.image instanceof AbstractModel) {
+    if (this.model instanceof AbstractModel) {
       for (let index = 0; index < this.count; index++) {
-        copy.push((this.image as AbstractModel).generate());
+        copy.push((this.model as AbstractModel).generate());
       }
     } else {
-      for (let index = 0; index < 10; index++) {
-        copy.push(this.image.transform(request, params));
+      for (let index = 0; index < this.count; index++) {
+        copy.push(this.model.transform(request, params));
       }
     }
 

@@ -35,14 +35,7 @@ abstract class ViewSet {
    * description - The discription od the Viewset route, (used to generated the api documentation)
    * @returns - The decorator function _action
    */
-  public static action(
-    detail: boolean = false,
-    methods: MethodType[] = ["GET"],
-    pathName: string | undefined | null,
-    description: string = "No Description"
-  ) {
-    return _action(detail, methods, pathName, description);
-  }
+  public static action = _action
 }
 
 /**
@@ -56,7 +49,7 @@ abstract class ViewSet {
 function _action(
   detail: boolean = false,
   methods: MethodType[] = ["GET"],
-  pathName: string | undefined | null,
+  pathName: string | undefined | null= null,
   description: string = "No Description"
 ) {
   return (

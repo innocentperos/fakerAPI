@@ -10,37 +10,37 @@ import { Router as FARouter } from "../router";
 type FunctionRequestHandler = (
   request: Request,
   response: Response,
-  params?: ParamsType
+  params ? : ParamsType
 ) => void;
 
-type RequestHandlerType =
-  | FunctionRequestHandler
-  | AbstractModel
-  | Transformer;
+type RequestHandlerType = |
+  FunctionRequestHandler |
+  AbstractModel |
+  Transformer;
 
-type MethodType =
-  | "GET"
-  | "POST"
-  | "DELETE"
-  | "PUT"
-  | "OPTIONS"
-  | "PATCH"
-  | "HEAD"
-  | string;
+type MethodType = |
+  "GET" |
+  "POST" |
+  "DELETE" |
+  "PUT" |
+  "OPTIONS" |
+  "PATCH" |
+  "HEAD" |
+  string;
 
 /**
  *  Each `key` represent a method type,
  *
  */
 type MethodRequestHanderType = {
-  [key in MethodType]?: RequestHandlerType;
+  [key in MethodType] ? : RequestHandlerType;
 };
 
 type ConfigType = {
   [key: string]: any;
   request: Request;
   response: Response;
-  params?: ParamsType;
+  params ? : ParamsType;
 };
 
 /**
@@ -51,20 +51,20 @@ class FakerServer {
   /**
    * @type string specific the route the server would be running on
    */
-  private serverPath: string;
+  private serverPath: string ="";
 
   private expressApp: Express;
   private expressRouter: Router;
   private appPassed: boolean = false;
 
   // Single method handler , handlers can be a function or a model
-  private methodRequestHanders: Map<string, MethodRequestHanderType> =
+  private methodRequestHanders: Map < string, MethodRequestHanderType > =
     new Map();
 
-  private routerMaps: Map<string, FARouter> = new Map();
+  private routerMaps: Map < string, FARouter > = new Map();
 
-  constructor(path: string = "/api", expressInstance?: Express) {
-    this.serverPath = path;
+  constructor(serverPath: string|undefined = "", expressInstance ? : Express) {
+    const path = serverPath?.trim()
     if (expressInstance) {
       this.appPassed = true;
       this.expressApp = expressInstance;
@@ -76,10 +76,21 @@ class FakerServer {
     this.expressRouter = Router();
 
     this.expressApp.use(this.serverPath, this.expressRouter);
-
-    this.expressRouter.all("*", (req: Request, res: Response) => {
-      this.onNewRequest(req, res);
-    });
+    if(path === "" || !path){
+      this.expressRouter.all("*", (req: Request, res: Response) => {
+        this.onNewRequest(req, res);
+      });
+    }else{
+      const pattern = RegExp("^\/+")
+      let p = this.serverPath.replace(pattern,"")
+      p = "/"+ p
+      this.serverPath = p
+      this.expressRouter.all(p, (req: Request, res: Response) => {
+        this.onNewRequest(req, res);
+      });
+    }
+    
+    
   }
 
   /**
@@ -230,7 +241,7 @@ class FakerServer {
     request: Request,
     response: Response,
     path: string,
-    params?: ParamsType
+    params ? : ParamsType
   ): boolean {
     // Gets all method handlers associated to the path
     const handlers = this.methodRequestHanders.get(path);
@@ -273,7 +284,7 @@ class FakerServer {
    * @param request - The request object
    * @param response - The response object
    * path - The request path without the server prefix path
-   * @returns - true if the request handled by a router or false if there was no router to handle the request
+   * @returns - true if the request handled by a router or false if there was  no router to handle the request
    */
   private _handleRouterRequest(
     request: Request,
@@ -301,7 +312,7 @@ class FakerServer {
          */
         if (!_m.startsWith("/")) continue;
 
-        const router = this.routerMaps.get(routerPath)!;
+        const router = this.routerMaps.get(routerPath) !;
 
         // pass the request to the found router and see if it can handle the request
         const result = router.on(request as any, response, _m);
@@ -321,7 +332,12 @@ class FakerServer {
    * @param response - The request response object
    */
   private onNewRequest(request: Request, response: Response) {
-    const path = request.path.replace(this.serverPath, "");
+    let path = request.path.replace(this.serverPath, "").trim();
+    
+    const tempPattern = RegExp("\/$")
+    if(!path.match(tempPattern)){
+      path = path+"/"
+    }
 
     if (request.method === "OPTIONS") response.setHeader("Accept", "");
 

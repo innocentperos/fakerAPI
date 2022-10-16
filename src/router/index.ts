@@ -18,12 +18,12 @@ class Router {
   /***
    * Map that holds various viewset objects with there key been there path prefix
    */
-  viewsetMap: Map<string, ViewSetMapItemType> = new Map();
+  viewsetMap: Map < string, ViewSetMapItemType > = new Map();
 
   /***
    * Represent the prefix of the router
    */
-  public root?: string;
+  public root ? : string;
 
   /**
    * Sets the prefix of the router
@@ -39,9 +39,13 @@ class Router {
    * @param root - the prefix of the viewset
    * @viewset - The class of the actual viewset, the class will be instantiated by the router object here
    */
-  register(root: string, viewset: new () => ViewSet) {
+  register(root: string, viewset: new() => ViewSet) {
     const instance = new viewset();
     const blueprint = viewset.prototype as ViewSetType;
+    if (!blueprint.__paths__) {
+      blueprint.__paths__ = new Map()
+      blueprint.__actions__ = new Map()
+    }
 
     this.viewsetMap.set(root, { instance, blueprint });
   }
@@ -126,6 +130,22 @@ class Router {
     request: Request,
     response: Response
   ): boolean | undefined {
+    
+    const __instance = viewset.instance as any
+
+    // For get and post request directly to the viewset path
+    if (path.trim() === "") {
+      const method = request.method.toUpperCase() as MethodType
+
+      if (method === "GET" && typeof __instance.get === 'function') {
+        __instance.get(request, response)
+        return true
+      } else if (method === "POST" && typeof __instance.create === "function") {
+        __instance.create(request, response)
+        return true
+      }
+      return
+    }
     // 1 Get all the support path of the viewset
     const viewsetPaths = Array.from(viewset.blueprint.__paths__.keys());
 
@@ -187,6 +207,32 @@ class Router {
         logRequest(request);
         return true;
       }
+    } else {
+      let params = PathUtil.isMatch("/:id/", path, true)
+      if (params) {
+        switch (request.method.toUpperCase()) {
+
+          case "POST":
+            if (typeof __instance.update === "function") {
+              __instance.update(request, response, params.id)
+              return true
+            }
+            break
+          case "DELETE":
+            if (typeof __instance.delete === "function") {
+              __instance.delete(request, response, params.id)
+              return true;
+            }
+            break
+          case "GET":
+            if (typeof __instance.retreive === "function") {
+              __instance.retreive(request, response, params.id)
+              return true
+            }
+            break
+        }
+      }
+
     }
 
     return;
