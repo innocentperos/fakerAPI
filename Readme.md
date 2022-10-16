@@ -51,7 +51,7 @@ server.run()
 
 ## Components
 
-### FakerServer{#FakerServer}
+### FakerServer { #FakerServer }
 
 This is the instance of the API Faker Server which will handle all request routed to it.
 
