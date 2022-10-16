@@ -7,6 +7,8 @@ import { PathUtil, ParamsType } from "./path";
 import { Transformer } from "../transformers";
 import { Router as FARouter } from "../router";
 
+import { ViewSet } from "../router/viewset"
+
 type FunctionRequestHandler = (
   request: Request,
   response: Response,
@@ -51,7 +53,7 @@ class FakerServer {
   /**
    * @type string specific the route the server would be running on
    */
-  private serverPath: string ="";
+  private serverPath: string = "";
 
   private expressApp: Express;
   private expressRouter: Router;
@@ -63,7 +65,11 @@ class FakerServer {
 
   private routerMaps: Map < string, FARouter > = new Map();
 
-  constructor(serverPath: string|undefined = "", expressInstance ? : Express) {
+  private __internalRouter: FARouter;
+
+  private __internlRouterRoot: string = "/___internalRouter"
+
+  constructor(serverPath: string | undefined = "", expressInstance ? : Express) {
     const path = serverPath?.trim()
     if (expressInstance) {
       this.appPassed = true;
@@ -72,25 +78,29 @@ class FakerServer {
       this.expressApp = express();
     }
 
+
+    this.__internalRouter = new FARouter()
+
+    this.route(this.__internlRouterRoot, this.__internalRouter)
     // Request the handler for all request
     this.expressRouter = Router();
 
     this.expressApp.use(this.serverPath, this.expressRouter);
-    if(path === "" || !path){
+    if (path === "" || !path) {
       this.expressRouter.all("*", (req: Request, res: Response) => {
         this.onNewRequest(req, res);
       });
-    }else{
+    } else {
       const pattern = RegExp("^\/+")
-      let p = this.serverPath.replace(pattern,"")
-      p = "/"+ p
+      let p = this.serverPath.replace(pattern, "")
+      p = "/" + p
       this.serverPath = p
       this.expressRouter.all(p, (req: Request, res: Response) => {
         this.onNewRequest(req, res);
       });
     }
-    
-    
+
+
   }
 
   /**
@@ -209,9 +219,20 @@ class FakerServer {
    *
    * @remark This method can throw error if the `path` ends with /
    */
-  public route(path: string, router: FARouter) {
+  public route(path: string, routerOrViewSet: FARouter | (new() => ViewSet)) {
+
+    if (!(routerOrViewSet instanceof FARouter)) {
+      console.log("As Viewset")
+      const viewset = routerOrViewSet as new() => ViewSet
+
+      this.__internalRouter.register(path, viewset)
+      console.log(this.__internalRouter)
+      return
+    }
+
+    const router = routerOrViewSet as FARouter
     try {
-      if (path.match(/\/$/)) {
+      if (path.match(/\/$/) && path != this.__internlRouterRoot) {
         throw new Error(
           `Avoid using router path that ends with \x1b[41m\x1b[37m / \x1b[0m `
         );
@@ -230,6 +251,7 @@ class FakerServer {
     router._root = path;
     this.routerMaps.set(path, router);
   }
+
   /**
    * Handles request that matches a specific static path that has a method handler registered to it
    *
@@ -291,15 +313,23 @@ class FakerServer {
     response: Response,
     path: string
   ): boolean {
+    
+    console.log("Handling Router", {path})
     // Get all the routers path prefix
     const routersPath = Array.from(this.routerMaps.keys());
 
     // loop through the routerPath to see those that match the start of the path
     for (const routerPath of routersPath) {
-      if (path.startsWith(routerPath)) {
+      if (path.startsWith(routerPath) && routerPath !== this.__internlRouterRoot) {
         // A match was found
         // strip the prefix of the router from the path
         const _m = path.replace(routerPath, "");
+        
+                console.log({
+          "message": "using external router",
+          _m
+        })
+
 
         // This insures that the right router is select since router prefix are not allowed to end with /
 
@@ -318,8 +348,20 @@ class FakerServer {
         const result = router.on(request as any, response, _m);
 
         if (result) return true;
-      }
+      } else if (routerPath === this.__internlRouterRoot) {
 
+        // For internal router , This is to handle ViewSet that where passed into the route feature,  there is no need to strip the router path
+        console.log({
+          "message": "using internal router",
+          path
+        })
+        const router = this.routerMaps.get(routerPath) !;
+
+        // pass the request to the found router and see if it can handle the request
+        const result = router.on(request as any, response, path);
+
+        if (result) return true;
+      }
       continue;
     }
 
@@ -333,10 +375,10 @@ class FakerServer {
    */
   private onNewRequest(request: Request, response: Response) {
     let path = request.path.replace(this.serverPath, "").trim();
-    
+
     const tempPattern = RegExp("\/$")
-    if(!path.match(tempPattern)){
-      path = path+"/"
+    if (!path.match(tempPattern)) {
+      path = path + "/"
     }
 
     if (request.method === "OPTIONS") response.setHeader("Accept", "");

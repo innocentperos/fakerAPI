@@ -53,5 +53,6 @@ router.register("users", UserViewset)
 const server = new FakerServer()
 
 server.route("/api", router)
+server.route("/users", UserViewset)
 
 server.run()
