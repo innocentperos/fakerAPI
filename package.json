@@ -1,6 +1,6 @@
 {
   "name": "api-faker-demo",
-  "version": "1.0.0",
+  "version": "1.0.1alpha",
   "description": "A full customizible api faking package that allows you to mock , clone and fake API with fake yet realistic data",
   "scripts": {
     "build":"tsc",

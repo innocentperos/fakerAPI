@@ -316,5 +316,93 @@ The transformer then has to override the abstract method `transform(request, par
 
 1. **ListTransformer**
 
-    This transformer generate list of a specific [`Model` ](#Model)
+    This transformer generate list of a specific [`Model` ](#Model) provided to it constructor
+    
+    The constructor accept two parameter, the first parameter is a model instance or another transformer instance,  while the second parameter is an option parameter of type number, which represent the length of the list.
+    > Constructor
+    > ```typescript
+    > constructor(model:AbstractModel> |Transformer, count = 10 ) 
+    > ```
+    
+    **Example**
+    ```javascript
+    const {Model, FakerServer, Fields, ListTransformer} = require("api-faker")
+    
+    const MessageModel = new Model({
+      message:new Fields.TextField(30),
+      read: ()=>{
+        return Math.floor(Math.random()*10) %5 == 0
+      }
+    })
+    
+    const server = new FakerServer("/api")
+    
+    server.get("/messages/", new ListTransformer(MessageModel, 30))
+    
+    server.run(8000)
+    // Try making a get request to http://localhost:8000/api/messages/
+    // It will return a list of the message model data
+    
+    ```
+    
+### ViewSet
+Viewset allows you use a class to group request handlers together.
 
+**ViewSet can only be used with TypeScript as it uses decorators  which currently is not support natively in javascript at the moment.**
+
+**Example**
+> viewset.js
+
+```javascript
+
+const {ViewSet, FakerServer, Model, Fields, Router, ListTransformer} = require("api-faker")
+const UserModel = new Model({
+  name: new Fields.NameField(),
+  address:new Fields.FullAddressField()
+})
+
+class UserViewset extends ViewSet{
+  
+  private usersList = []
+  
+  @ViewSet.action(false)
+  public users (request, response){
+    response.send(this.usersList)
+  }
+  
+  @ViewSet.action(true)
+  public user (request, response, id){
+    let user = this.usersList.find(e=>e.id==id)
+    
+    if(user){
+      response.send(user)
+    }else{
+      response.status(404)
+      response.send({
+        message:"User not found"
+      })
+    }
+  }
+  
+  @ViewSet.action(false,["POST"])
+  public add(request, response){
+    const newUser = userModel.generate()
+    this.usersList.push({...newUser,id: this.usersList.length})
+    
+    response.send(this.usersList[this.usersList.length - 1 ])
+  }
+  
+  @ViewSet.action(true, ["DELETE"])
+  public delete(request, response, id){
+    const user = this.users.find(e=>e.id==id)
+    if(!user){
+      response.status(404)
+      response.send({
+        message: "User could not be found"
+      })
+    }else{
+      const index = this.users.indexOf(user)
+    }
+  }
+}
+```

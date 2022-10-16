@@ -1,41 +1,57 @@
+import { ViewSet, FakerServer, Model, Fields, Router, ListTransformer} from "./../src/"
 
-import { Request, Response } from "express"
-import {Fields, Model , FakerServer, ListTransformer, ViewSet, action, MethodType, Router} from "../src/"
-
-const UserModel =  new Model({
+const UserModel = new Model({
   name: new Fields.NameField(),
-  email: new Fields.EmailField()
+  address: new Fields.FullAddressField()
 })
 
+class UserViewset extends ViewSet {
 
-const server = new FakerServer("/fake")
+  usersList:any[] = []
 
-server.get("/user/", new ListTransformer(UserModel))
-server.get("/user/:id/", UserModel)
-server.post("/user/:id/:name", (req, res, params)=>{
-  
-  res.send("hello adding user "+params?.name)
-})
-
-class AuthViewSet extends ViewSet{
-
-  @action(false, ["GET"], undefined, "login in the user")
-  public login(request:Request, response:Response){
-    response.send(
-      UserModel.generate()
-    )
-  }
-  
-  @action(true, ["POST","GET"],undefined)
-  profile(request:Request, response:Response){
-    response.send(UserModel.generate())
+  public get(request: any, response: any) {
+    response.send(this.usersList)
   }
 
+  public retreive(request: any, response: any, id: any) {
+    
+    let user = this.usersList.find((e :any)=> e.id == id)
+
+    if (user) {
+      response.send(user)
+    } else {
+      response.status(404)
+      response.send({
+        message: "User not found"
+      })
+    }
+  }
+
+  public create(request: any, response: any) {
+    const newUser = UserModel.generate()
+    this.usersList.push({ ...newUser, id: this.usersList.length })
+
+    response.send(this.usersList[this.usersList.length - 1])
+  }
+
+  public delete(request: any, response: any, id: any) {
+    const user = this.usersList.find((e:any) => e.id == id)
+    if (!user) {
+      response.status(404)
+      response.send({
+        message: "User could not be found"
+      })
+    } else {
+      const index = this.usersList.indexOf(user)
+    }
+  }
 }
 
-const APIRouter = new Router()
-APIRouter.register("auth", AuthViewSet)
+const router = new Router()
+router.register("users", UserViewset)
 
-server.route("/api", APIRouter)
+const server = new FakerServer()
+
+server.route("/api", router)
 
 server.run()

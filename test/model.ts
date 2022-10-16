@@ -7,7 +7,7 @@ const CommentModel = new Model({
     body: new Fields.TextField()
 })
 
-const fakerServer = new FakerServer("/api")
+const fakerServer = new FakerServer()
 
 fakerServer.get("/comments/", new ListTransformer(CommentModel))
 
