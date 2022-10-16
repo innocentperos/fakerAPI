@@ -93,7 +93,7 @@ It constructor accept two
 9. `route(path:string, handler:Router)`  
     This method is used to provider a `Router` that will handle multiple request to points that are have the `path` prefix
   
-A <a name="RequestHandlers">**`RequestHandler`**<a> can be a Model class instance, a [`Transformer`](#Transformers) or a Function with the signature `(request, response,params)=>void` where `request` and `response` are express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
+A <a name="RequestHandlers">**`RequestHandler`**</a> can be a Model class instance, a [`Transformer`](#Transformers) or a Function with the signature `(request, response,params)=>void` where `request` and `response` are express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
 
 **Examples of RequestHandlers**
 ```javascript
