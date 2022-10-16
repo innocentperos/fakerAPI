@@ -93,7 +93,7 @@ It constructor accept two
 9. `route(path:string, handler:Router)`  
     This method is used to provider a `Router` that will handle multiple request to points that are have the `path` prefix
   
-A **`RequestHandler`**{#RequestHandlers} can be a Model class instance, a [`Transformer`](#Transformers) or a Function with the signature `(request, response,params)=>void` where `request` and `response` are express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
+A <a name="RequestHandlers">**`RequestHandler`**<a> can be a Model class instance, a [`Transformer`](#Transformers) or a Function with the signature `(request, response,params)=>void` where `request` and `response` are express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
 
 **Examples of RequestHandlers**
 ```javascript
@@ -134,7 +134,7 @@ server.get("/user/:id/followers", (request, response, param) => {
 server.run(5000)
 ```
 
-### 🔶 Model{#Model}
+### <a name="Model"> 🔶 Model </a>
 
 A model allows you to define the structure and content the server will return.
 
@@ -189,7 +189,7 @@ const CommentModel = new Model({
     > Note that the date field of the model is a static value of the date 2021-05-07 , which means everytime an instance of the model is created the date will always be 2021-05-07
     > While the reaction field is a dynamic field since it value will be determined by the function it was asign to it. The `request` parameter is an express Request object, while the params will contains the parameters extracted from the `request` path.
 
-### Fields{#Fields}
+### <a name="Fields">Fields </a>
 Fields allows you to define the type of data faker server should generate in your model instances. All the fields provided by faker server are provided in the Fields object exported by the package ` const {Fields} = require("api-faker")`
 
 **List of available Fields**
@@ -224,7 +224,7 @@ Fields allows you to define the type of data faker server should generate in you
     
     This generate a random yet unique UUID 
 
-6. **GenderField** { #GenderField }
+6. <a name="GenderField">**GenderField**<a>
     
     This generate a random gender
 
@@ -303,7 +303,7 @@ username: new Fields.Username(),
 activity_count: new LargeNumberField()
 })
  ```
-### Transformers {#Transformers}
+### <a name="Transformers">Transformers<a>
 Transformers are classes that takes a  `FAModel` and transform it into another format
 
 
