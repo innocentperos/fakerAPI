@@ -1,10 +1,10 @@
 import { Express, Request, Response, Router } from "express";
 import express from "express";
-import { FAAbstractModel } from "../models";
+import { AbstractModel } from "../models";
 
 import { logRequest, logMessage, logResponse } from "./logger";
 import { PathUtil, ParamsType } from "./path";
-import { FAAbstractTransformer } from "../transformers";
+import { Transformer } from "../transformers";
 import { Router as FARouter } from "../router";
 
 type FunctionRequestHandler = (
@@ -15,8 +15,8 @@ type FunctionRequestHandler = (
 
 type RequestHandlerType =
   | FunctionRequestHandler
-  | FAAbstractModel
-  | FAAbstractTransformer;
+  | AbstractModel
+  | Transformer;
 
 type MethodType =
   | "GET"
@@ -254,14 +254,14 @@ class FakerServer {
     if (typeof handler === "function") {
       (handler as FunctionRequestHandler)(request, response, params);
       return true;
-    } else if (handler instanceof FAAbstractModel) {
+    } else if (handler instanceof AbstractModel) {
       // Handler is a model send the model's generated data
-      response.send((handler as FAAbstractModel).generate(request, params));
+      response.send((handler as AbstractModel).generate(request, params));
       return true;
-    } else if (handler instanceof FAAbstractTransformer) {
+    } else if (handler instanceof Transformer) {
       // The handler is a transformer call the transform function and send the data it returns
       response.send(
-        (handler as FAAbstractTransformer).transform(request, params)
+        (handler as Transformer).transform(request, params)
       );
       return true;
     }

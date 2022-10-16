@@ -1,14 +1,14 @@
-import { Fields, Field } from "./fields";
+import { Field } from "./fields";
 import { ParamsType } from "./../core";
 import { Request } from "express";
-import FAAbstractModel from "./abstract-model";
+import AbstractModel from "./abstract-model";
 type FieldFunctionType = (config?: any) => string | any[] | number | object;
 
 type FieldsType = {
   [key: string]: string | number | any[] | Field | FieldFunctionType;
 };
 
-class Model extends FAAbstractModel {
+class Model extends AbstractModel {
   protected fields: FieldsType = {};
 
   constructor(fields: FieldsType) {
@@ -45,4 +45,4 @@ class Model extends FAAbstractModel {
   }
 }
 
-export { Model, FAAbstractModel };
+export { Model, AbstractModel };

@@ -1,14 +1,14 @@
 import { Request } from "express";
-import { FAAbstractTransformer } from ".";
-import { FAAbstractModel } from "../";
+import { Transformer } from ".";
+import { AbstractModel } from "../";
 import { ParamsType } from "../core/";
 
 /**
  * A Transformer that can generate a list of a given model or another transformer
  */
-class ListTransformer extends FAAbstractTransformer {
+class ListTransformer extends Transformer {
   /** The Model or Transformer the transformer will generate */
-  protected image: FAAbstractModel | FAAbstractTransformer;
+  protected image: AbstractModel | Transformer;
 
   /** The number of items the transformer should generate */
   protected count: number;
@@ -18,7 +18,7 @@ class ListTransformer extends FAAbstractTransformer {
    * @param image The Model or transformer to apply the listTransformer
    * @param count The number of `image` item to generate in the array
    */
-  constructor(image: FAAbstractModel | FAAbstractTransformer, count = 10) {
+  constructor(image: AbstractModel | Transformer, count = 10) {
     super();
 
     this.image = image;
@@ -33,9 +33,9 @@ class ListTransformer extends FAAbstractTransformer {
    */
   public transform(request?: Request, params?: ParamsType) {
     const copy = [];
-    if (this.image instanceof FAAbstractModel) {
+    if (this.image instanceof AbstractModel) {
       for (let index = 0; index < this.count; index++) {
-        copy.push((this.image as FAAbstractModel).generate());
+        copy.push((this.image as AbstractModel).generate());
       }
     } else {
       for (let index = 0; index < 10; index++) {

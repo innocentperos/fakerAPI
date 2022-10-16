@@ -1,7 +1,7 @@
 
-import {FakerServer, Fields, FAModel, FAListTransformer}  from "../src"
+import {FakerServer, Fields, Model, ListTransformer}  from "../src"
 
-const CommentModel = new FAModel({
+const CommentModel = new Model({
     username: new Fields.UsernameField(),
     name: new Fields.EmailField(),
     body: new Fields.TextField()
@@ -9,6 +9,6 @@ const CommentModel = new FAModel({
 
 const fakerServer = new FakerServer("/api")
 
-fakerServer.get("/comments/", new FAListTransformer(CommentModel))
+fakerServer.get("/comments/", new ListTransformer(CommentModel))
 
 fakerServer.run(5000)

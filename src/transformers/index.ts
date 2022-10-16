@@ -4,7 +4,7 @@ import { ParamsType } from "../core/";
 /**
  * The abstract class from which custom Transformers can be created from by extending it
  */
-abstract class FAAbstractTransformer {
+abstract class Transformer {
   /**
    *
    * @param request An Express Request object of the current request
@@ -13,4 +13,4 @@ abstract class FAAbstractTransformer {
   public abstract transform(request?: Request, params?: ParamsType): any;
 }
 
-export { FAAbstractTransformer };
+export { Transformer };
