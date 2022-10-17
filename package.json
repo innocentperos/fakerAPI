@@ -1,7 +1,7 @@
 {
   "name": "faker-api",
   "version": "1.0.0",
-  "description": "A full customizible api faking package that allows you to mock , clone and fake Rest API with fake yet realistic data",
+  "description": "A fully customizible rest api faking package that allows you to mock , clone and fake Rest API with fake yet realistic data",
   "scripts": {
     "build":"tsc",
     "test": "node ./lib/test/test.js",
@@ -12,7 +12,7 @@
     "postversion" : "git push && git push --tags"
   },
   "author": "Innocent Saidu Peros",
-  "keywords":["fake-api","fake","fakerjs","server","api","easy","mock","mocking","moking api","faking api","rest","rest api","static api","stateful api", "dynamic api", "test api","clone api"],
+  "keywords":["fake-api","fake","fakerjs","server","api","easy","mock","web","moking api","faking api","rest","rest api","static api","stateful api", "dynamic api", "test api","clone api"],
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.14",
