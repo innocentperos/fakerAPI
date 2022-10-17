@@ -22,10 +22,10 @@ abstract class StatefulViewSet extends ViewSet{
   
   public create(request:Request, response:Response){
     
-    let length = this.lastId
+    const length = this.lastId
     
-    let _model = this.model.generate(request, {})
-    let model = {..._model, id: this.lastId}
+    const _model = this.model.generate(request, {})
+    const model = {..._model, id: this.lastId}
     
     this.models.set(String(this.lastId), model)
     this.lastId ++;
@@ -36,7 +36,7 @@ abstract class StatefulViewSet extends ViewSet{
   
   public retreive(request:Request, response:Response,id:any){
     
-    let _model = this.models.get(id)
+    const _model = this.models.get(id)
     
     if(_model){
       response.send(_model)
@@ -50,10 +50,10 @@ abstract class StatefulViewSet extends ViewSet{
   
   public update(request:Request, response:Response, id: any ){
     
-    let _model = this.models.get(id)
+    const _model = this.models.get(id)
     
     if(_model){
-      let model = {
+      const model = {
         id, ... this.model.generate(request,{id})
       }
       this.models.set(id, model)
@@ -68,7 +68,7 @@ abstract class StatefulViewSet extends ViewSet{
   
   public delete(request:Request, response:Response, id:any){
     
-    let _model = this.models.get(id)
+    const _model = this.models.get(id)
     if(_model){
       this.models.delete(id)
       response.send({

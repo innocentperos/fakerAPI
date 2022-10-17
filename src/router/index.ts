@@ -1,3 +1,5 @@
+    /* tslint:disable:variable-name*/
+
 import { PathUtil } from "../core/path";
 import { logRequest, logResponse, logMessage } from "../core/logger";
 import {
@@ -130,7 +132,7 @@ class Router {
     request: Request,
     response: Response
   ): boolean | undefined {
-    
+
     const __instance = viewset.instance as any
 
     // For get and post request directly to the viewset path
@@ -208,7 +210,7 @@ class Router {
         return true;
       }
     } else {
-      let params = PathUtil.isMatch("/:id/", path, true)
+      const params = PathUtil.isMatch("/:id/", path, true)
       if (params) {
         switch (request.method.toUpperCase()) {
 

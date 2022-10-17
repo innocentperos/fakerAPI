@@ -1,3 +1,5 @@
+    /* tslint:disable:variable-name*/
+
 import { Express, Request, Response, Router } from "express";
 import express from "express";
 import { AbstractModel } from "../models";
@@ -234,7 +236,7 @@ class FakerServer {
       return
 
       }catch(error){
-        let e = error as Error 
+        const e = error as Error 
         logMessage(`${e.message} \n ${e.stack?.split("\n").splice(0,3).join("\n")}`)
       }
       
@@ -242,7 +244,7 @@ class FakerServer {
 
     const router = routerOrViewSet as FARouter
     try {
-      if (path.match(/\/$/) && path != this.__internlRouterRoot) {
+      if (path.match(/\/$/) && path !== this.__internlRouterRoot) {
         throw new Error(
           `Avoid using router path that ends with \x1b[41m\x1b[37m / \x1b[0m `
         );

@@ -1,3 +1,5 @@
+/* tslint:disable:max-classes-per-file */
+
 import { Request, Response } from "express"
 import { ViewSet, FakerServer, Model, Fields, Router, ListTransformer} from "./../src/"
 
@@ -16,7 +18,7 @@ class UserViewset extends ViewSet {
 
   public retreive(request: any, response: any, id: any) {
     
-    let user = this.usersList.find((e :any)=> e.id == id)
+    const user = this.usersList.find((e :any)=> e.id === id)
 
     if (user) {
       response.send(user)
@@ -36,7 +38,7 @@ class UserViewset extends ViewSet {
   }
 
   public delete(request: any, response: any, id: any) {
-    const user = this.usersList.find((e:any) => e.id == id)
+    const user = this.usersList.find((e:any) => e.id === id)
     if (!user) {
       response.status(404)
       response.send({
