@@ -6,3 +6,8 @@ tslint.json
 .prettierrc
 .gitignore
 node_modules
+.notebook
+.vs
+
+.notebook/
+.vs/

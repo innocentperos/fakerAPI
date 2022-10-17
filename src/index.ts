@@ -5,6 +5,8 @@ import { Transformer } from "./transformers";
 import ListTransformer from "./transformers/list-transformer";
 import { Router } from "./router";
 import { ViewSet, MethodType } from "./router/viewset";
+import { StatefulViewSet } from "./router/stateful-viewset";
+
 
 // From src/core/index
 export { FakerServer };
@@ -26,4 +28,4 @@ export {
 
 const action = ViewSet.action;
 // From Router
-export { Router, ViewSet, action, MethodType };
+export { Router, ViewSet, action, MethodType, StatefulViewSet };

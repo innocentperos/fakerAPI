@@ -1,4 +1,14 @@
 
 OPTIONS http://localhost:8800/fake/api/auth/login/
 ###
-POST  http://localhost:8800/fake/user/66/
+GET  http://localhost:8000/messages
+
+###
+GET  http://localhost:8800/users/1/freinds
+
+###
+POST  http://localhost:8800/users/login?success=true
+
+###
+
+GET  http://localhost:8800/api/users/

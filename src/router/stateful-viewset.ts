@@ -9,6 +9,13 @@ abstract class StatefulViewSet extends ViewSet{
   
   private models = new Map()
   private lastId = 0
+  private model:Model
+
+  constructor(model:Model){
+    super()
+    this.model = model
+  }
+
   public get(request:Request, response:Response){
     response.send(Array.from(this.models.values()))
   }
@@ -20,7 +27,7 @@ abstract class StatefulViewSet extends ViewSet{
     let _model = this.model.generate(request, {})
     let model = {..._model, id: this.lastId}
     
-    this.models.set(this.lastId, model)
+    this.models.set(String(this.lastId), model)
     this.lastId ++;
     response.status(201)
     response.send(model)
@@ -79,9 +86,21 @@ abstract class StatefulViewSet extends ViewSet{
     return this.models.get(id)
   }
   
-  public addItem(item:any, id?:any){
-    this.models.set(id,item)
+  public addItem(item:any, id?:any):any{
+    if(id){
+      this.models.set(id,item)
+      return id
+    }else{
+      const _id = String(this.lastId)
+      this.models.set(_id,item)
+      return _id
+
+    }
+    
   }
   
-  public abstract get model():Model;
+}
+
+export {
+  StatefulViewSet
 }

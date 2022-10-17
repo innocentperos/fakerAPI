@@ -1,6 +1,6 @@
 # API-Faker
 
-A lightweight fully OOP fake api content generator and provider server, written in [Typescript](http://typescript.com), build on top of [ExpressJs](www.expressjs.com) and [FakerJs](www.faker.api)
+A lightweight fully OOP fake api content generator and provider server, written in [Typescript](http://typescript.com), build on top of [ExpressJs](www.expressjs.com) and [FakerJs](www.faker.api) inspired by [Django Rest FrameWork](https://www.django-rest-framework.org)
 
 ## ✨ Features
 
@@ -56,11 +56,60 @@ server.run()
 
 ```
 
-## Components
+## Example Using [ViewSet](#ViewSet) and [Router](#Router)
+Go through the reference to understand how to use [ViewSets](#ViewSet) and [Router](#Router)
 
-### FakerServer
+```javascript
+const { Fields , FakerServer, Model , StatefulViewSet, Router} = require("api-faker");
 
-This is the instance of the API Faker Server which will handle all request routed to it.
+// Defining our models
+const UserModel = new Model({
+    name: Fields.Name,
+    email: Fields.Email,
+    comment: new Fields.TextField(20)
+})
+
+const PostModel = new Model({
+    username:new Fields.UsernameField(),
+    avatar: new Fields.AvatarField(),
+    cover: new Fields.ImageField(),
+    content: new Fields.TextField(20)
+})
+
+// Stateful Viewset for the PostModel
+class PostViewSet extends StatefulViewSet{
+    constructor(){
+        super(PostModel)
+    }
+}
+
+// Stateful Viewset for the UserModel
+class UserViewSet extends StatefulViewSet{
+    constructor(){
+        super(UserModel)
+    }
+}
+
+// Using Router
+const APIRouter = new Router()
+
+// Registering router to server
+const server = new FakerServer();
+server.route("/api",APIRouter)
+
+// Adding viewsets to router 
+//  URL Path http://localhost:8800/api/posts will be handled by the PostViewSet
+APIRouter.register("posts", PostViewSet)
+//  URL Path  http://localhost:8800/api/users will be handled by the UserViewSet
+APIRouter.register("users", UserViewSet)
+server.run()
+```
+
+## API Reference
+
+### <a name="FakerServer">FakerServer </a>
+
+This is the API Faker Server class which will handle all request routed to  by the express server.
 
 It constructor accept two
 
@@ -69,38 +118,51 @@ It constructor accept two
 > ```
 
 1. `path:string`
-    This specifies the path the faker server will be handling the default is ""
+    This specifies the path prefix that the faker server will listen and handle request to, the default is "" which means listen to all request.
 2. `expressApp:Express`
-    This is an optional parameter that specify which express app the server is to run on, if non is created then the FakerServer will create a new Express Server internally to use
+    This is an optional parameter that specify which express app the server is to run on, if non is provided then the FakerServer will create a new Express Server internally to use.
 
 > Note: If the second parameter is not provided,  then to start the server you nedd to call the `run` method of the `FakerServer` instance. But if it is provided, then the server will start immediately after the expressApp `listen` method is called
 
 #### Methods
 
 1. `public run(port:number = 8800 )`
-    This is used to start the FakerServer if no express App was provided to it constructor
+
+    This is used to start the FakerServer if no express App was provided to it constructor.
+
 2. `public static from(expressInstance:Express, path:string ="/api")`
-    This is a static method that will return a new instance of the [`FakerServer`](#FakerServer) with the expressInstance as the expressApp and the path as the serverPath on the express app
+
+    This is a static method that will return a new instance of the [`FakerServer`](#FakerServer) with the expressInstance as the expressApp and the path as the serverPath on the express app of the faker server.
+
 3. `get(path:string, handler:RequestHandler)`
-    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all GET HTTP request to `path`
+
+    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all GET HTTP request to `path` of the faker server.
+
 4. `post(path:string, handler:RequestHandler)`
-    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all POST HTTP request to `path`
+
+    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all POST HTTP request to `path` of the faker server.
+
 5. `delete(path:string, handler:RequestHandler)`
-    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all DELETE HTTP request to `path`
 
-6. `put(path:string, handler:RequestHandler)`  
-    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all PUT HTTP request to `path`
+    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all DELETE HTTP request to `path` of the faker server.
 
-7. `patch(path:string, handler:RequestHandler)`  
-    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all PUT HTTP request to `path`
+6. `put(path:string, handler:RequestHandler)`
 
-8. `put(path:string, handler:RequestHandler)`  
-    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all PUT HTTP request to `path`
+    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all PUT HTTP request to `path` of the faker server.
 
-9. `route(path:string, handler:Router|ViewSet)`  
-    This method is used to provide a `Router` that will handle multiple request to points that are have the `path` prefix, or a `ViewSet` class that groups related points to together.
+7. `patch(path:string, handler:RequestHandler)`
+
+    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all PUT HTTP request to `path` of the faker server.
+
+8. `put(path:string, handler:RequestHandler)` 
+
+    This method is used to provide a [`RequestHandler`](#RequestHandlers) that will handle all PUT HTTP request to `path` of the faker server.
+
+9. `route(path:string, handler:Router|ViewSet)`
+
+    This method is used to provide a [`Router`](#Router) that will handle multiple request to points that are have the `path` prefix, or a [`ViewSet`](#ViewSet) class that groups related points to together.
   
-A **`RequestHandler`** can be a Model class instance, a [`Transformer`](#Transformers) an object, an array or, a Function with the signature `(request, response,params)=>void` where `request` and `response` are express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
+A <a name="RequestHandlers">**`RequestHandler`**</a> can be a Model class instance, a [`Transformer`](#Transformers) class instance, an object, an array or, a Function with the signature `(request, response,params)=>void` where `request` and `response` are express request and response object,  while the params is an object containing all the extracted parameter from the `request` path
 
 **Examples of RequestHandlers**
 
@@ -151,7 +213,7 @@ server.run()
 
 ### <a name="Model"> 🔶 Model </a>
 
-A model allows you to define the structure and content the server will return.
+Models allows you to define the structure and content of the data the server will return.
 
 **Example**
 
@@ -171,19 +233,19 @@ const CommentModel = new Model({
 })
 ```
 
- API Faker two classes for creating models.
+ API Faker provides two classes for creating models.
 
  1. `AbstractModel` class
 
-    This is the main abstract class that any custom model extends.This class has only one abstract method `generate(request, params)` which gets call when generating the random content.
+    This is the main abstract class that any custom model extends. This class has only one abstract method `generate(request, params)` which gets call when generating content from the model class.
 
  2. `Model` class
 
-    This is the generic class that API Faker provides for quickly defining your model structure and generating random content from the model
+    This is the generic class that API Faker provides for quickly defining your model structure and generating random content from the model instance.
 
-    It's constructor accept and object with `key` been the field name of the model and `value` been a [`Field`](#Fields)|`function(request:Request, params:{}):any`|`string`|`number`|`object` class instance which defines the type of value to be populated into the field.
+    It's constructor accept an object with `key` been the field name of the model and `value` been a [`Field`](#Fields)|`function(request:Request, params:{}):any`|`string`|`number`|`object` class instance which defines the type of value to be populated into the field.
 
-    If the value is not a function or `Field` then the value of the field will be treated as static (Returns the data as it is, do not generate data for this field)
+    If the value is not a function or [`Field`](#Fields) then the value of the field will be treated as static (Returns the data as it is, do not generate data for this field)
 
     If the `field` value is a `function` then the function get called to evaluate the value of model field during data generating.
 
@@ -205,21 +267,22 @@ const CommentModel = new Model({
     > Note that the date field of the model is a static value of the date 2021-05-07 , which means everytime an instance of the model is created the date will always be 2021-05-07
     > While the reaction field is a dynamic field since it value will be determined by the function it was asign to it. The `request` parameter is an express Request object, while the params will contains the parameters extracted from the `request` path.
 
-### <a name="Fields">Fields </a>
+### <a name="Fields"> Fields </a>
 
 Fields allows you to define the type of data faker server should generate in your model instances. All the fields provided by faker server are provided in the Fields object exported by the package `const {Fields} = require("api-faker")`
 
 **List of available Fields**
 
-1. **NameField**
+1. `NameField`
 
-    This will generate fake full name
-2. **EmailField**
+    This will generates fake full name
+2. `EmailField`
 
-    This generate random email address
-3. **PhoneNumberField**
+    This generates random email address
 
-    This generate random phone number, you can pass is the format of the phone number you require with # for places you want faker to insert random digits for example
+3. `PhoneNumberField`
+
+    This generates random phone number, you can pass in the format of the phone number you require with # for places you want faker to insert random digits for example
 
      ```javascript
         const {Fields} = require("api-faker")
@@ -229,9 +292,9 @@ Fields allows you to define the type of data faker server should generate in you
         // This will log to the terminal a random phone number like (+32) 234 22 7466
       ```
 
-4. **TextField**
+4. `TextField`
 
-    This will generate random text content consisting of 50 words , which can be changed by providing the number of words in the constructor
+    This generates random text content consisting of 50 words , which can be changed by providing the number of words in the constructor
 
     ```javascript
         const {Fields} = require("api-faker")
@@ -241,29 +304,29 @@ Fields allows you to define the type of data faker server should generate in you
         // This will log to the terminal a random text consisting of 20 words
       ```
 
-5. **IDField**
+5. `IDField`
 
-    This generate a random yet unique UUID
+    This generates a random yet unique UUID
 
-6. <a name="GenderField">**GenderField**<a>
+6. <a name="GenderField">`GenderField`<a>
 
-    This generate a random gender
+    This generates a random gender
 
-7. **SexTypeField**
+7. `SexTypeField`
 
     Similar to [`GenderField`]( #GenderField )
 
-8. **AvatarField**
+8. `AvatarField`
 
-    This generate a random url to an avatar (image) on the internet
+    This generates a random url to an avatar (image) on the internet
 
-9. **UsernameField**
+9. `UsernameField`
 
-    This generate a random username
+    This generates a random username
 
-10. **ImageField**
+10. `ImageField`
 
-    This generate a random url to an image on the internet with default size of `width=480` and `height=640`. The width and height can be defined to the constructor
+    This generates a random url to an image on the internet with default size of `width=480` and `height=640`. The width and height can be defined to the constructor
 
     ```javascript
     const {Fields} = require("api-faker")
@@ -273,29 +336,29 @@ Fields allows you to define the type of data faker server should generate in you
     // This will generate a url of an image with height = 500 and width = 200
     ```
 
-11. **CountryField**
+11. `CountryField`
 
-    This will generate a random country name
+    This generates a random country name
 
-12. **CountryCodeField**
+12. `CountryCodeField`
 
-    This will generate a random country code
+    This generates a random country code
 
-13. **StateField**
+13. `StateField`
 
-    This will generate a random state name
+    This generates a random state name
 
-14. **LocationField**
+14. `LocationField`
 
-    This will generate a random latitude and longtitude as a array of two length [lat, lng]
+    This generates a random latitude and longtitude as a array of two length [lat, lng]
 
-15. **FullAddressField**
+15. `FullAddressField`
 
-    This generate a random address
+    This generates a random address
 
-16. **NearByField**
+16. `NearByField`
 
-    This generate a random location that is at a specific distance to another location (relative).
+    This generates a random location that is at a specific distance to another location (relative).
     The constructor accepts an array [lat,lng] as the first parameter which represent the relative location , and a number as the second parameter which repesent the distance in km
 
     ```javascript
@@ -329,17 +392,17 @@ Fields allows you to define the type of data faker server should generate in you
   })
   ```
 
-### <a name="Transformers">Transformers<a>
+### <a name="Transformers">Transformers</a>
 
 Transformers are classes that takes a  `FAModel` and transform it into another format
 
-Each [`Transformer`](#Transformers) most be a decendant class of the `AbstractTransformer` class.
+Each [`Transformer`](#Transformers) most be a extends the `AbstractTransformer` class.
 
 The transformer then has to override the abstract method `transform(request, params)=>any` which will be called any time data to be consumed is requested from the transformer class. check out. request is an Express request object, while params contains parameters extracted from the request path
 
 #### Available Transformers
 
-1. **ListTransformer**
+1. <a name="ListTransformer"> **ListTransformer** </a>
 
     This transformer generate list of a specific [`Model`](#Model) provided to it constructor
 
@@ -372,11 +435,9 @@ The transformer then has to override the abstract method `transform(request, par
     
     ```
 
-### ViewSet
+### <a name="ViewSet"> ViewSet </a>
 
-Viewset allows the use of classes to group request handlers together. This is ispired by django-rest-framewok.
-
-**ViewSet can only be used with TypeScript as it uses decorators  which currently is not support natively in javascript at the moment.**
+Viewsets are classes allows grouping request handlers together. This is ispired by [django-rest-framewok](https://www.django-rest-framework.org/api-guide/viewsets/).
 
 **Example**
 
@@ -478,9 +539,51 @@ server.run()
 
     > This means assuming the viewset path was `http://localhost:8800/users-api`; then any `DELETE` Request of the format `http://localhost:8800/users-api/:id` will be handled by the `delete` method of the viewset and the `id` parameter of the method will be the `:id` of request path.
 
-  Custom paths can be handled by a viewset apart from the ones listed above by using the **`@ViewSet.action`** decorator on any method of the viewset class.
+#### <a name ="StatefulViewSet"> StatefulViewSet </a>
+
+  StatefulViewSet allows you to create viewsets that support all the prebuild viewset request handing methods, to a specific model, for stateful data providing.
+
+  Assuming the url path to a stateful viewset is `http://localhost:8800/viewset/`
+
+  Then `POST` request to `http://localhost:8800/viewset/` will create a new model data, add it to the state and return the data.
+
+  A `GET` request to `http://localhost:8800/viewset/` will return all the model data that is in the state as an array
+
+  A `GET` request to `http://localhost:8800/viewset/:id` will return the model data in the state with the corresponding `id` if non exist then a 404 status is returned.
+
+  A `POST` request to `http://localhost:8800/viewset/:id` will override the model data in the state with the corresponding `id` and return it, if non exist then a 404 status is returned.
+
+  A `DELETE` request to `http://localhost:8800/viewset/:id` will remove the model data in the state with the corresponding `id` if non exist then a 404 status is returned.
+
+  > Example
+
+  ```javascript
+      const {StatefulViewSet, FakerServer, Model, Fields} = require("api-faker")
+
+      const PostModel = new Model({
+          username:new Fields.UsernameField(),
+          avatar: new Fields.AvatarField(),
+          cover: new Fields.ImageField(),
+          content: new Fields.TextField(20)
+      })
+
+      class PostViewSet extends StatefulViewSet{
+          constructor(){
+              super(PostModel)
+          }
+      }
+
+
+      const server = new FakerServer()
+      server.route("posts", PostViewSet)
+      server.run()
+  ```
+
+#### Using Custom Viewset and Custom ViewSet Method
+
+  Apart from the provided method listed above for handling request in a viewset, custom method can be used to handle custom path as well by using the **`ViewSet.action`** decorator
   
-  > **This can only be used in typescript project and the `expiramentalDecorator` set to true in your tsconfig.json compilerOptions**
+  > This can only usable with typescript project and the `expiramentalDecorator` set to `true` in your tsconfig.json compilerOptions.
 
 **Using the @ViewSet.action decorator**
 
@@ -543,3 +646,60 @@ If it is set to false the the path to the method willl be `viewset_path/`+`metho
   server.run()
 
   ```
+
+### <a name="Router"> Router </a>
+Router allows you to group multiple ViewSet to a specific path prefix that matches the router path. 
+
+#### Methods in Router Class
+
+1. `register(root: string, viewset: new() => ViewSet)`
+
+    This Method is used to add a new viewset to the router, root specifies the path of the `ViewSet` in respect to the router path.
+
+> Example of Usage 
+```javascript
+const { Fields , FakerServer, Model , StatefulViewSet, Router} = require("api-faker");
+
+// Defining our models
+const UserModel = new Model({
+    name: Fields.Name,
+    email: Fields.Email,
+    comment: new Fields.TextField(20)
+})
+
+const PostModel = new Model({
+    username:new Fields.UsernameField(),
+    avatar: new Fields.AvatarField(),
+    cover: new Fields.ImageField(),
+    content: new Fields.TextField(20)
+})
+
+// Stateful Viewset for the PostModel
+class PostViewSet extends StatefulViewSet{
+    constructor(){
+        super(PostModel)
+    }
+}
+
+// Stateful Viewset for the UserModel
+class UserViewSet extends StatefulViewSet{
+    constructor(){
+        super(UserModel)
+    }
+}
+
+// Using Router
+const APIRouter = new Router()
+
+// Registering router to server
+const server = new FakerServer();
+server.route("/api",APIRouter)
+
+// Adding viewsets to router 
+//  URL Path http://localhost:8800/api/posts will be handled by the PostViewSet
+APIRouter.register("posts", PostViewSet)
+
+//  URL Path  http://localhost:8800/api/users will be handled by the UserViewSet
+APIRouter.register("users", UserViewSet)
+server.run()
+```
