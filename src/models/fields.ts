@@ -58,6 +58,7 @@ class PhoneNumberField extends Field {
   format: string | undefined;
   constructor(format?: string) {
     super();
+    this.format = format
   }
   public generate() {
     if (this.format) return faker.phone.number(this.format);

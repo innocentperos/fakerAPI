@@ -1,7 +1,4 @@
 
-
 OPTIONS http://localhost:8800/fake/api/auth/login/
-
-
 ###
 POST  http://localhost:8800/fake/user/66/

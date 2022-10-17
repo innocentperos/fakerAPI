@@ -1,3 +1,4 @@
+import { Request, Response } from "express"
 import { ViewSet, FakerServer, Model, Fields, Router, ListTransformer} from "./../src/"
 
 const UserModel = new Model({
@@ -46,13 +47,22 @@ class UserViewset extends ViewSet {
     }
   }
 }
+class CommentViewSet extends ViewSet{
 
+  get(request:Request, response:Response){
+    response.send({
+      message:"Hello Comments"
+    })
+  }
+}
 const router = new Router()
+
 router.register("users", UserViewset)
+router.register("comments", CommentViewSet)
 
 const server = new FakerServer()
 
 server.route("/api", router)
-server.route("/users", UserViewset)
+server.route("users", UserViewset)
 
 server.run()

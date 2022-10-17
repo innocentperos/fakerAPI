@@ -18,7 +18,7 @@ type FunctionRequestHandler = (
 type RequestHandlerType = |
   FunctionRequestHandler |
   AbstractModel |
-  Transformer;
+  Transformer | {[key:string] :any} | any[];
 
 type MethodType = |
   "GET" |
@@ -222,12 +222,22 @@ class FakerServer {
   public route(path: string, routerOrViewSet: FARouter | (new() => ViewSet)) {
 
     if (!(routerOrViewSet instanceof FARouter)) {
-      console.log("As Viewset")
+      
+      try {
+      if (path.trimStart().startsWith("/") || path.trimEnd().endsWith("/")){
+        throw new Error("Path starting or ending with / is not allowed when registering a viewset")
+      }
       const viewset = routerOrViewSet as new() => ViewSet
 
       this.__internalRouter.register(path, viewset)
-      console.log(this.__internalRouter)
+      
       return
+
+      }catch(error){
+        let e = error as Error 
+        logMessage(`${e.message} \n ${e.stack?.split("\n").splice(0,3).join("\n")}`)
+      }
+      
     }
 
     const router = routerOrViewSet as FARouter
@@ -297,6 +307,8 @@ class FakerServer {
         (handler as Transformer).transform(request, params)
       );
       return true;
+    }else{
+      response.send(handler)
     }
     return false;
   }
@@ -313,8 +325,7 @@ class FakerServer {
     response: Response,
     path: string
   ): boolean {
-    
-    console.log("Handling Router", {path})
+
     // Get all the routers path prefix
     const routersPath = Array.from(this.routerMaps.keys());
 
@@ -324,12 +335,6 @@ class FakerServer {
         // A match was found
         // strip the prefix of the router from the path
         const _m = path.replace(routerPath, "");
-        
-                console.log({
-          "message": "using external router",
-          _m
-        })
-
 
         // This insures that the right router is select since router prefix are not allowed to end with /
 
@@ -351,10 +356,7 @@ class FakerServer {
       } else if (routerPath === this.__internlRouterRoot) {
 
         // For internal router , This is to handle ViewSet that where passed into the route feature,  there is no need to strip the router path
-        console.log({
-          "message": "using internal router",
-          path
-        })
+        
         const router = this.routerMaps.get(routerPath) !;
 
         // pass the request to the found router and see if it can handle the request
