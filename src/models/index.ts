@@ -16,7 +16,7 @@ class Model extends AbstractModel {
     this.fields = fields;
   }
 
-  public generate(params?: ParamsType, request?: Request) {
+  public generate(request?: Request,params?: ParamsType) {
     // Get the keys of the fields
     const keys = Object.keys(this.fields);
 
